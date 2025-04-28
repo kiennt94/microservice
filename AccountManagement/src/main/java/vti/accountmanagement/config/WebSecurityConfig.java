@@ -25,7 +25,7 @@ import static vti.accountmanagement.enums.Role.USER;
 public class WebSecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {
-            "/api/account/auth/**",
+            "/api/account/auth",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html"

@@ -10,7 +10,7 @@ import vti.accountmanagement.enums.Role;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "account")
@@ -45,7 +45,7 @@ public class Account implements Serializable {
 
     @CreatedDate
     @Column(name = "CreateDate")
-    Date createDate;
+    LocalDateTime createDate;
 
     @ManyToOne
     @JoinColumn(name = "PositionID")

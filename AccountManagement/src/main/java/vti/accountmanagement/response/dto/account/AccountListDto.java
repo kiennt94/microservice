@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import vti.accountmanagement.enums.Role;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,7 +16,7 @@ public class AccountListDto {
     String email;
     String username;
     String fullName;
-    LocalDate createDate;
+    LocalDateTime createDate;
     String departmentName;
     String positionName;
     Role role;
