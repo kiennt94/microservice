@@ -3,20 +3,21 @@ package vti.accountmanagement.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import vti.common.config.JwtAccessDeniedHandler;
+import vti.common.config.JwtAuthenticationEntryPoint;
+import vti.common.config.JwtAuthenticationFilter;
 
 import static org.springframework.http.HttpMethod.GET;
-import static vti.accountmanagement.enums.Role.ADMIN;
-import static vti.accountmanagement.enums.Permission.ADMIN_READ;
+import static vti.common.enums.Role.ADMIN;
+import static vti.common.enums.Permission.ADMIN_READ;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-import static vti.accountmanagement.enums.Role.USER;
+import static vti.common.enums.Role.USER;
 
 @Configuration
 @EnableWebSecurity

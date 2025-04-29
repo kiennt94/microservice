@@ -3,16 +3,13 @@ package vti.accountmanagement.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import vti.accountmanagement.enums.Role;
-import vti.accountmanagement.exception.NotFoundException;
-import vti.accountmanagement.exception.DuplicateException;
 import vti.accountmanagement.model.Account;
+import vti.accountmanagement.model.AccountMapper;
 import vti.accountmanagement.model.Department;
 import vti.accountmanagement.model.Position;
-import vti.accountmanagement.model.dto.account.AccountDto;
-import vti.accountmanagement.payload.PageResponse;
 import vti.accountmanagement.repository.AccountRepository;
 import vti.accountmanagement.repository.DepartmentRepository;
 import vti.accountmanagement.repository.PositionRepository;
@@ -22,8 +19,14 @@ import vti.accountmanagement.request.authenticate.AuthenticationRequest;
 import vti.accountmanagement.response.dto.account.AccountInfoDto;
 import vti.accountmanagement.response.dto.account.AccountListDto;
 import vti.accountmanagement.service.AccountService;
-import vti.accountmanagement.utils.MessageUtil;
-import vti.accountmanagement.utils.ObjectMapperUtils;
+import vti.common.dto.AccountDto;
+import vti.common.dto.CustomUserDetails;
+import vti.common.enums.Role;
+import vti.common.exception_handler.DuplicateException;
+import vti.common.exception_handler.NotFoundException;
+import vti.common.payload.PageResponse;
+import vti.common.utils.MessageUtil;
+import vti.common.utils.ObjectMapperUtils;
 
 @Service
 @AllArgsConstructor
@@ -35,6 +38,9 @@ public class AccountServiceImpl implements AccountService {
     private final ObjectMapperUtils objectMapperUtils = new ObjectMapperUtils();
     private final PasswordEncoder passwordEncoder;
     private static final String ACCOUNT_ID_NOT_EXISTS = "account.id.not.exists";
+    private static final String ACCOUNT_USERNAME_NOT_EXISTS = "account.username.not.exists";
+    private static final String ACCOUNT_EMAIL_EXISTS = "account.email.exists";
+    private static final String ACCOUNT_USERNAME_EXISTS = "account.username.exists";
 
     @Override
     public PageResponse<AccountListDto> getAll(Pageable pageable, String search) {
@@ -64,10 +70,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void save(AccountCreateRequest account) {
         if (Boolean.TRUE.equals(accountRepository.existsAccountByEmail(account.getEmail()))) {
-            throw new DuplicateException(MessageUtil.getMessage("account.email.exists"));
+            throw new DuplicateException(MessageUtil.getMessage(ACCOUNT_EMAIL_EXISTS));
         }
         if (Boolean.TRUE.equals(accountRepository.existsAccountByUsername(account.getUsername()))) {
-            throw new DuplicateException(MessageUtil.getMessage("account.username.exists"));
+            throw new DuplicateException(MessageUtil.getMessage(ACCOUNT_USERNAME_EXISTS));
         }
         if (!positionRepository.existsById(account.getPositionId())) {
             throw new NotFoundException(MessageUtil.getMessage("position.id.not.exists"));
@@ -90,7 +96,7 @@ public class AccountServiceImpl implements AccountService {
             throw new NotFoundException(MessageUtil.getMessage(ACCOUNT_ID_NOT_EXISTS));
         }
         if (Boolean.TRUE.equals(accountRepository.existsAccountByEmailAndAccountIdNot(account.getEmail(), account.getAccountId()))) {
-            throw new DuplicateException(MessageUtil.getMessage("account.email.exists"));
+            throw new DuplicateException(MessageUtil.getMessage(ACCOUNT_EMAIL_EXISTS));
         }
         if (!positionRepository.existsById(account.getPositionId())) {
             throw new NotFoundException(MessageUtil.getMessage("position.id.not.exists"));
@@ -114,20 +120,20 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto findByUsername(String username) {
-        Account account = accountRepository.findByUsername(username).orElse(null);
-        if (account == null) {
-            return null;
-        }
-        return objectMapperUtils.map(account, AccountDto.class);
-    }
-
-    @Override
     public AccountDto auth(AuthenticationRequest request) {
         Account account = accountRepository.findByUsername(request.getUsername()).orElse(null);
         if (account == null || !passwordEncoder.matches(request.getPassword(), account.getPassword())) {
             return null;
         }
-        return objectMapperUtils.map(account, AccountDto.class);
+        return AccountMapper.toDto(account);
+    }
+
+    @Override
+    public UserDetails findByUsername(String username){
+        Account account = accountRepository.findByUsername(username).orElse(null);
+        if (account == null) {
+            throw new NotFoundException(MessageUtil.getMessage(ACCOUNT_USERNAME_NOT_EXISTS));
+        }
+        return new CustomUserDetails(AccountMapper.toDto(account));
     }
 }

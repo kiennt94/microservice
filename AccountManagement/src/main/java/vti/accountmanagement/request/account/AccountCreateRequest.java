@@ -9,10 +9,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
-import vti.accountmanagement.enums.Role;
-import vti.anotation.FormatWhiteSpace;
-import vti.anotation.Trim;
-import vti.anotation.ValidateEnum;
+import vti.common.anotation.FormatWhiteSpace;
+import vti.common.anotation.Trim;
+import vti.common.anotation.ValidateEnum;
+import vti.common.enums.Role;
 
 @Getter
 @Setter

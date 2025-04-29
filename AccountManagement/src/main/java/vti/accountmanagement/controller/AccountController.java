@@ -9,10 +9,9 @@ import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import vti.accountmanagement.model.dto.account.AccountDto;
-import vti.accountmanagement.payload.PageResponse;
 import vti.accountmanagement.repository.AccountRepository;
 import vti.accountmanagement.request.account.AccountCreateRequest;
 import vti.accountmanagement.request.account.AccountUpdateRequest;
@@ -20,8 +19,10 @@ import vti.accountmanagement.request.authenticate.AuthenticationRequest;
 import vti.accountmanagement.response.dto.account.AccountInfoDto;
 import vti.accountmanagement.response.dto.account.AccountListDto;
 import vti.accountmanagement.service.AccountService;
-import vti.accountmanagement.utils.ConstantUtils;
-import vti.accountmanagement.utils.SortUtils;
+import vti.common.utils.ConstantUtils;
+import vti.common.utils.SortUtils;
+import vti.common.dto.AccountDto;
+import vti.common.payload.PageResponse;
 
 @RestController
 @RequestMapping("/api/account")
@@ -95,7 +96,12 @@ public class AccountController {
     }
 
     @PostMapping("/auth")
-    public AccountDto getAccountByUsername(@RequestBody @Valid AuthenticationRequest request) {
-        return accountService.auth(request);
+    public ResponseEntity<AccountDto> getAccountByUsername(@RequestBody @Valid AuthenticationRequest request) {
+        return ResponseEntity.ok(accountService.auth(request));
+    }
+
+    @GetMapping("/username")
+    public ResponseEntity<UserDetails> findByUsername(@RequestParam String username) {
+        return ResponseEntity.ok(accountService.findByUsername(username));
     }
 }

@@ -14,13 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import vti.accountmanagement.payload.PageResponse;
+import vti.common.payload.PageResponse;
 import vti.accountmanagement.request.department.DepartmentCreateRequest;
 import vti.accountmanagement.request.department.DepartmentUpdateRequest;
 import vti.accountmanagement.response.dto.department.DepartmentListDto;
 import vti.accountmanagement.service.DepartmentService;
-import vti.accountmanagement.utils.ConstantUtils;
-import vti.accountmanagement.utils.SortUtils;
+import vti.common.utils.ConstantUtils;
+import vti.common.utils.SortUtils;
 
 @RestController
 @RequestMapping("/api/department")

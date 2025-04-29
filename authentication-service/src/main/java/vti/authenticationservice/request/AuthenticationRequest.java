@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import vti.anotation.Trim;
+import vti.common.anotation.Trim;
 
 @Getter
 @Setter

@@ -5,11 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vti.accountmanagement.model.Position;
-import vti.accountmanagement.payload.PageResponse;
+import vti.common.payload.PageResponse;
 import vti.accountmanagement.repository.PositionRepository;
 import vti.accountmanagement.response.dto.position.PositionListDto;
 import vti.accountmanagement.service.PositionService;
-import vti.accountmanagement.utils.ObjectMapperUtils;
+import vti.common.utils.ObjectMapperUtils;
 
 @Service
 @AllArgsConstructor

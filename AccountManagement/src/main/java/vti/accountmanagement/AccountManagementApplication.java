@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@ComponentScan(basePackages = {"vti.exception_handler", "vti.accountmanagement"})
+@ComponentScan(basePackages = {"vti.common", "vti.accountmanagement"})
 public class AccountManagementApplication {
 
 	public static void main(String[] args) {

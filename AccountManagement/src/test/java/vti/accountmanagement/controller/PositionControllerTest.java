@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
 import vti.accountmanagement.config.WebSecurityConfig;
-import vti.accountmanagement.payload.PageResponse;
+import vti.common.payload.PageResponse;
 import vti.accountmanagement.response.dto.position.PositionListDto;
 import vti.accountmanagement.service.PositionService;
 

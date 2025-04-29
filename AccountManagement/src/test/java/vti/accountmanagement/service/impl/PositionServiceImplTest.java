@@ -11,10 +11,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
-import vti.accountmanagement.enums.PositionName;
+import vti.common.enums.PositionName;
 import vti.accountmanagement.model.Position;
 import vti.accountmanagement.repository.PositionRepository;
-import vti.accountmanagement.utils.ObjectMapperUtils;
+import vti.common.utils.ObjectMapperUtils;
 
 import java.util.List;
 

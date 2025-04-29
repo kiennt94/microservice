@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import vti.accountmanagement.enums.Role;
+import vti.common.enums.Role;
 
 import java.time.LocalDateTime;
 

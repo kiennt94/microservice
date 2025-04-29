@@ -6,7 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import vti.accountmanagement.enums.Role;
+import vti.common.enums.Role;
 
 import java.io.Serial;
 import java.io.Serializable;

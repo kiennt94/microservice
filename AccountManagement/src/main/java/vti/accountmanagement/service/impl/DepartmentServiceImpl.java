@@ -6,19 +6,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vti.accountmanagement.exception.NotFoundException;
-import vti.accountmanagement.exception.DuplicateException;
+import vti.common.exception_handler.NotFoundException;
+import vti.common.exception_handler.DuplicateException;
 import vti.accountmanagement.model.Account;
 import vti.accountmanagement.model.Department;
-import vti.accountmanagement.payload.PageResponse;
+import vti.common.payload.PageResponse;
 import vti.accountmanagement.repository.AccountRepository;
 import vti.accountmanagement.repository.DepartmentRepository;
 import vti.accountmanagement.request.department.DepartmentCreateRequest;
 import vti.accountmanagement.request.department.DepartmentUpdateRequest;
 import vti.accountmanagement.response.dto.department.DepartmentListDto;
 import vti.accountmanagement.service.DepartmentService;
-import vti.accountmanagement.utils.MessageUtil;
-import vti.accountmanagement.utils.ObjectMapperUtils;
+import vti.common.utils.MessageUtil;
+import vti.common.utils.ObjectMapperUtils;
 
 import java.util.List;
 

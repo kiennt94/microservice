@@ -12,16 +12,16 @@ import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.mockito.junit.jupiter.MockitoExtension;
-import vti.accountmanagement.enums.PositionName;
-import vti.accountmanagement.enums.Role;
-import vti.accountmanagement.exception.DuplicateException;
-import vti.accountmanagement.exception.NotFoundException;
+import vti.common.enums.PositionName;
+import vti.common.enums.Role;
+import vti.common.exception_handler.DuplicateException;
+import vti.common.exception_handler.NotFoundException;
 import vti.accountmanagement.model.*;
 import vti.accountmanagement.repository.*;
 import vti.accountmanagement.request.account.*;
 import vti.accountmanagement.response.dto.account.*;
-import vti.accountmanagement.utils.MessageUtil;
-import vti.accountmanagement.utils.ObjectMapperUtils;
+import vti.common.utils.MessageUtil;
+import vti.common.utils.ObjectMapperUtils;
 
 import java.util.*;
 

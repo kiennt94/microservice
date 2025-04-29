@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vti.accountmanagement.enums.PositionName;
-import vti.accountmanagement.utils.PositionNameConverter;
+import vti.common.enums.PositionName;
+import vti.common.utils.PositionNameConverter;
 
 import java.io.Serial;
 import java.io.Serializable;

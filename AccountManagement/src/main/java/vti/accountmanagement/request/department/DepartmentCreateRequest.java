@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import vti.anotation.FormatWhiteSpace;
+import vti.common.anotation.FormatWhiteSpace;
 
 @Getter
 @Setter

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import vti.accountmanagement.enums.PositionName;
+import vti.common.enums.PositionName;
 
 @Getter
 @Setter

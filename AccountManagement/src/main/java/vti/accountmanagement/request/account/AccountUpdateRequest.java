@@ -7,8 +7,8 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import vti.anotation.FormatWhiteSpace;
-import vti.anotation.Trim;
+import vti.common.anotation.FormatWhiteSpace;
+import vti.common.anotation.Trim;
 
 @Getter
 @Setter

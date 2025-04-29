@@ -14,14 +14,14 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import vti.accountmanagement.config.WebSecurityConfig;
-import vti.accountmanagement.exception.NotFoundException;
-import vti.accountmanagement.payload.PageResponse;
+import vti.common.exception_handler.NotFoundException;
+import vti.common.payload.PageResponse;
 import vti.accountmanagement.request.department.DepartmentCreateRequest;
 import vti.accountmanagement.request.department.DepartmentUpdateRequest;
 import vti.accountmanagement.response.dto.department.DepartmentListDto;
 import vti.accountmanagement.service.DepartmentService;
-import vti.accountmanagement.utils.ConstantUtils;
-import vti.accountmanagement.utils.MessageUtil;
+import vti.common.utils.ConstantUtils;
+import vti.common.utils.MessageUtil;
 
 import java.util.List;
 import java.util.Objects;

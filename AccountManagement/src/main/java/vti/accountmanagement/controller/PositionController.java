@@ -10,11 +10,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import vti.accountmanagement.payload.PageResponse;
+import vti.common.payload.PageResponse;
 import vti.accountmanagement.response.dto.position.PositionListDto;
 import vti.accountmanagement.service.PositionService;
-import vti.accountmanagement.utils.ConstantUtils;
-import vti.accountmanagement.utils.SortUtils;
+import vti.common.utils.ConstantUtils;
+import vti.common.utils.SortUtils;
 
 @RestController
 @RequestMapping("/api/position")
