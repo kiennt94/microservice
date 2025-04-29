@@ -1,8 +1,9 @@
 package vti.common.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import vti.common.dto.AccountDto;
 
+@Service
 public interface CommonAccountService {
-    UserDetails findByUsername(String username) throws UsernameNotFoundException;
+    AccountDto findByUsername(String username, String token);
 }

@@ -6,7 +6,7 @@
 		<groupId>vti</groupId>
 		<artifactId>microservice</artifactId>
 		<version>1.0-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath> <!-- Cập nhật đường dẫn đến pom.xml của root -->
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>authentication-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>

@@ -26,8 +26,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
             "WHERE acc.username LIKE %:search% " +
             "OR acc.fullName LIKE %:search% " +
             "OR acc.email LIKE %:search% " +
-            "OR acc.department.departmentName LIKE %:search% " +
-            "OR CAST(acc.position.positionName as string) LIKE %:search%"
+            "OR acc.department.departmentName LIKE %:search% "
     )
     Page<Account> findAll(Pageable pageable, String search);
 

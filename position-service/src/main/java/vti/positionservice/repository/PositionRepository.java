@@ -1,11 +1,11 @@
-package vti.accountmanagement.repository;
+package vti.positionservice.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import vti.accountmanagement.model.Position;
+import vti.positionservice.model.Position;
 
 @Repository
 public interface PositionRepository extends JpaRepository<Position, Integer> {

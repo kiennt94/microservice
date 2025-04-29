@@ -14,6 +14,7 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
+        <module name="position-service" />
         <module name="authentication-service" />
         <module name="vti-common" />
         <module name="AccountManagement" />
@@ -28,6 +29,7 @@
       <module name="AccountManagement" options="-parameters" />
       <module name="authentication-service" options="-parameters" />
       <module name="common-exception-handler" options="-parameters" />
+      <module name="position-service" options="-parameters" />
       <module name="vti-common" options="-parameters" />
     </option>
   </component>

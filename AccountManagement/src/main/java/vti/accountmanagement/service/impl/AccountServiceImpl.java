@@ -3,24 +3,21 @@ package vti.accountmanagement.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vti.accountmanagement.model.Account;
-import vti.accountmanagement.model.AccountMapper;
 import vti.accountmanagement.model.Department;
-import vti.accountmanagement.model.Position;
 import vti.accountmanagement.repository.AccountRepository;
 import vti.accountmanagement.repository.DepartmentRepository;
-import vti.accountmanagement.repository.PositionRepository;
 import vti.accountmanagement.request.account.AccountCreateRequest;
 import vti.accountmanagement.request.account.AccountUpdateRequest;
 import vti.accountmanagement.request.authenticate.AuthenticationRequest;
 import vti.accountmanagement.response.dto.account.AccountInfoDto;
 import vti.accountmanagement.response.dto.account.AccountListDto;
 import vti.accountmanagement.service.AccountService;
+import vti.common.config.JwtService;
 import vti.common.dto.AccountDto;
-import vti.common.dto.CustomUserDetails;
 import vti.common.enums.Role;
 import vti.common.exception_handler.DuplicateException;
 import vti.common.exception_handler.NotFoundException;
@@ -34,9 +31,10 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final DepartmentRepository departmentRepository;
-    private final PositionRepository positionRepository;
     private final ObjectMapperUtils objectMapperUtils = new ObjectMapperUtils();
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+
     private static final String ACCOUNT_ID_NOT_EXISTS = "account.id.not.exists";
     private static final String ACCOUNT_USERNAME_NOT_EXISTS = "account.username.not.exists";
     private static final String ACCOUNT_EMAIL_EXISTS = "account.email.exists";
@@ -47,7 +45,7 @@ public class AccountServiceImpl implements AccountService {
         objectMapperUtils.getModelMapper().typeMap(Account.class, AccountListDto.class)
                 .addMappings(m -> {
                     m.map(acc -> acc.getDepartment().getDepartmentName(), AccountListDto::setDepartmentName);
-                    m.map(acc -> acc.getPosition().getPositionName(), AccountListDto::setPositionName);
+//                    m.map(acc -> acc.getPosition().getPositionName(), AccountListDto::setPositionName);
                 });
         Page<Account> accounts = accountRepository.findAll(pageable, search);
         return new PageResponse<>(objectMapperUtils.mapEntityPageIntoDtoPage(accounts, AccountListDto.class));
@@ -62,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
         objectMapperUtils.getModelMapper().typeMap(Account.class, AccountInfoDto.class)
                 .addMappings(m -> {
                     m.map(acc -> acc.getDepartment().getDepartmentName(), AccountInfoDto::setDepartmentName);
-                    m.map(acc -> acc.getPosition().getPositionName(), AccountInfoDto::setPositionName);
+//                    m.map(acc -> acc.getPosition().getPositionName(), AccountInfoDto::setPositionName);
                 });
         return objectMapperUtils.map(account, AccountInfoDto.class);
     }
@@ -75,15 +73,15 @@ public class AccountServiceImpl implements AccountService {
         if (Boolean.TRUE.equals(accountRepository.existsAccountByUsername(account.getUsername()))) {
             throw new DuplicateException(MessageUtil.getMessage(ACCOUNT_USERNAME_EXISTS));
         }
-        if (!positionRepository.existsById(account.getPositionId())) {
-            throw new NotFoundException(MessageUtil.getMessage("position.id.not.exists"));
-        }
+//        if (!positionRepository.existsById(account.getPositionId())) {
+//            throw new NotFoundException(MessageUtil.getMessage("position.id.not.exists"));
+//        }
         if (!departmentRepository.existsById(account.getDepartmentId())) {
             throw new NotFoundException(MessageUtil.getMessage("department.id.not.exists"));
         }
         Account acc = objectMapperUtils.map(account, Account.class);
         acc.setDepartment(new Department(account.getDepartmentId()));
-        acc.setPosition(new Position(account.getPositionId()));
+//        acc.setPosition(new Position(account.getPositionId()));
         acc.setPassword(passwordEncoder.encode(acc.getPassword()));
         acc.setRole(Role.valueOf(account.getRole().toUpperCase()));
         accountRepository.save(acc);
@@ -98,14 +96,14 @@ public class AccountServiceImpl implements AccountService {
         if (Boolean.TRUE.equals(accountRepository.existsAccountByEmailAndAccountIdNot(account.getEmail(), account.getAccountId()))) {
             throw new DuplicateException(MessageUtil.getMessage(ACCOUNT_EMAIL_EXISTS));
         }
-        if (!positionRepository.existsById(account.getPositionId())) {
-            throw new NotFoundException(MessageUtil.getMessage("position.id.not.exists"));
-        }
+//        if (!positionRepository.existsById(account.getPositionId())) {
+//            throw new NotFoundException(MessageUtil.getMessage("position.id.not.exists"));
+//        }
         if (!departmentRepository.existsById(account.getDepartmentId())) {
             throw new NotFoundException(MessageUtil.getMessage("department.id.not.exists"));
         }
         objectMapperUtils.getModelMapper().map(account, acc);
-        acc.setPosition(new Position(account.getPositionId()));
+//        acc.setPosition(new Position(account.getPositionId()));
         acc.setDepartment(new Department(account.getDepartmentId()));
         accountRepository.save(acc);
     }
@@ -125,15 +123,18 @@ public class AccountServiceImpl implements AccountService {
         if (account == null || !passwordEncoder.matches(request.getPassword(), account.getPassword())) {
             return null;
         }
-        return AccountMapper.toDto(account);
+        return objectMapperUtils.map(account, AccountDto.class);
     }
 
     @Override
-    public UserDetails findByUsername(String username){
+    public AccountDto findByUsername(String username, String token){
+        if (!jwtService.isTokenValid(token.substring(7), username)) {
+            throw new BadCredentialsException("Invalid or expired token");
+        }
         Account account = accountRepository.findByUsername(username).orElse(null);
         if (account == null) {
             throw new NotFoundException(MessageUtil.getMessage(ACCOUNT_USERNAME_NOT_EXISTS));
         }
-        return new CustomUserDetails(AccountMapper.toDto(account));
+        return objectMapperUtils.map(account, AccountDto.class);
     }
 }

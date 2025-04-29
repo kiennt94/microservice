@@ -1,4 +1,4 @@
-package vti.accountmanagement.model;
+package vti.common.dto;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import vti.common.dto.AccountDto;
@@ -12,7 +12,7 @@ public class AccountMapper {
         throw new UnsupportedOperationException("Utility class");
     }
 
-    public static AccountDto toDto(Account account) {
+    public static AccountDto toDto(AccountDto account) {
         Role role = account.getRole();
         List<String> authorities = role.getAuthorities()
                 .stream()

@@ -31,6 +31,9 @@ public class Account implements Serializable {
     @Column(name = "AccountID")
     Integer accountId;
 
+    @Column(nullable = false, unique = true, name = "PositionId")
+    Integer positionId;
+
     @Column(nullable = false, unique = true, name = "username")
     String username;
 
@@ -46,10 +49,6 @@ public class Account implements Serializable {
     @CreatedDate
     @Column(name = "CreateDate")
     LocalDateTime createDate;
-
-    @ManyToOne
-    @JoinColumn(name = "PositionID")
-    Position position;
 
     @ManyToOne
     @JoinColumn(name = "DepartmentID")

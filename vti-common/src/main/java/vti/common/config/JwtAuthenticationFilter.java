@@ -8,10 +8,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import vti.common.dto.AccountDto;
+import vti.common.dto.AccountMapper;
 import vti.common.exception_handler.NotFoundException;
 import vti.common.payload.ApiError;
 import vti.common.service.CommonAccountService;
@@ -34,6 +35,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String username;
 
+        String path = request.getServletPath();
+        if (path.equals("/api/account/username")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -44,13 +51,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                UserDetails userDetails = this.accountService.findByUsername(username);
-
-                if (jwtService.isTokenValid(jwt, userDetails)) {
+                AccountDto account = this.accountService.findByUsername(username, jwt);
+                account = AccountMapper.toDto(account);
+                if (jwtService.isTokenValid(jwt, account)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
+                            account,
                             null,
-                            userDetails.getAuthorities()
+                            account.getAuthorities()
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);

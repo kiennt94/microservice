@@ -14,6 +14,7 @@
     <modules>
         <module>AccountManagement</module>
         <module>authentication-service</module>
+        <module>position-service</module>
         <module>vti-common</module>
     </modules>
     <properties>

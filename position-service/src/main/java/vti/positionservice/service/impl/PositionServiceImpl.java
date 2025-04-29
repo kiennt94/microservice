@@ -1,18 +1,18 @@
-package vti.accountmanagement.service.impl;
+package vti.positionservice.service.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import vti.accountmanagement.model.Position;
 import vti.common.payload.PageResponse;
-import vti.accountmanagement.repository.PositionRepository;
-import vti.accountmanagement.response.dto.position.PositionListDto;
-import vti.accountmanagement.service.PositionService;
 import vti.common.utils.ObjectMapperUtils;
+import vti.positionservice.model.Position;
+import vti.positionservice.repository.PositionRepository;
+import vti.positionservice.response.PositionListDto;
+import vti.positionservice.service.PositionService;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PositionServiceImpl implements PositionService {
 
     private final PositionRepository positionRepository;

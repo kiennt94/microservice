@@ -1,4 +1,4 @@
-package vti.accountmanagement.response.dto.position;
+package vti.positionservice.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

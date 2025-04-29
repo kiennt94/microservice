@@ -9,7 +9,6 @@ import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import vti.accountmanagement.repository.AccountRepository;
@@ -101,7 +100,7 @@ public class AccountController {
     }
 
     @GetMapping("/username")
-    public ResponseEntity<UserDetails> findByUsername(@RequestParam String username) {
-        return ResponseEntity.ok(accountService.findByUsername(username));
+    public ResponseEntity<AccountDto> findByUsername(@RequestParam String username, @RequestHeader(value = "Authorization") String token) {
+        return ResponseEntity.ok(accountService.findByUsername(username, token));
     }
 }
