@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import vti.authenticationservice.client.AccountClient;
 import vti.authenticationservice.request.AuthenticationRequest;
 import vti.authenticationservice.response.AuthenticationResponse;
 import vti.authenticationservice.service.AuthenticationService;
@@ -18,7 +18,7 @@ import vti.common.dto.AccountDto;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final RestTemplate restTemplate;
+    private final AccountClient accountClient;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
@@ -27,7 +27,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         log.debug("Authenticating user: {}", request.getUsername());
-        AccountDto account = restTemplate.postForObject(accountServiceUrl + "/auth", request, AccountDto.class);
+        AccountDto account = accountClient.getAccountDto(request);
         if (account == null || !passwordEncoder.matches(request.getPassword(), account.getPassword())) {
             throw new BadCredentialsException("Account not found");
         }

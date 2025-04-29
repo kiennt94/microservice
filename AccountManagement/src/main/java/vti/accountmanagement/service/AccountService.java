@@ -10,6 +10,8 @@ import vti.accountmanagement.response.dto.account.AccountListDto;
 import vti.common.dto.AccountDto;
 import vti.common.payload.PageResponse;
 
+import java.util.List;
+
 
 @Service
 public interface AccountService  {
@@ -19,5 +21,6 @@ public interface AccountService  {
     void update(AccountUpdateRequest account);
     void delete(Integer id);
     AccountDto auth(AuthenticationRequest request);
-    AccountDto findByUsername(String username, String token);
+    AccountDto findByUsername(String token);
+    List<AccountInfoDto> getAccountByDepartmentId(int departmentId);
 }

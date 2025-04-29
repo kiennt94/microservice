@@ -9,15 +9,15 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vti.common.payload.PageResponse;
 import vti.common.utils.ConstantUtils;
 import vti.common.utils.SortUtils;
+import vti.positionservice.response.PositionInfoDto;
 import vti.positionservice.response.PositionListDto;
 import vti.positionservice.service.PositionService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/position")
@@ -52,5 +52,10 @@ public class PositionController {
         return ResponseEntity.ok(
                 positionService.getAll(PageRequest.of(page, size, SortUtils.getSort(sort)), search)
         );
+    }
+
+    @PostMapping("/by-ids")
+    public List<PositionInfoDto> getPositionsByIds(@RequestBody List<Integer> ids) {
+        return positionService.getPositionsByIds(ids);
     }
 }

@@ -20,15 +20,15 @@ public class CommonAccountServiceImpl implements CommonAccountService {
     private String accountServiceFindUsernameUrl;
 
     @Override
-    public AccountDto findByUsername(String username, String token) {
+    public AccountDto findByUsername(String token) {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
+        headers.set("Authorization", token);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         ResponseEntity<AccountDto> response = restTemplate.exchange(
-                accountServiceFindUsernameUrl + username,
+                accountServiceFindUsernameUrl,
                 HttpMethod.GET,
                 entity,
                 AccountDto.class

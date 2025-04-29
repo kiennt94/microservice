@@ -1,6 +1,6 @@
-package vti.accountmanagement.service.impl;
+package vti.departmentservice.service.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,30 +8,33 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vti.common.exception_handler.NotFoundException;
 import vti.common.exception_handler.DuplicateException;
-import vti.accountmanagement.model.Account;
-import vti.accountmanagement.model.Department;
+import vti.departmentservice.client.AccountClient;
+import vti.departmentservice.model.Department;
 import vti.common.payload.PageResponse;
-import vti.accountmanagement.repository.AccountRepository;
-import vti.accountmanagement.repository.DepartmentRepository;
-import vti.accountmanagement.request.department.DepartmentCreateRequest;
-import vti.accountmanagement.request.department.DepartmentUpdateRequest;
-import vti.accountmanagement.response.dto.department.DepartmentListDto;
-import vti.accountmanagement.service.DepartmentService;
+import vti.departmentservice.repository.DepartmentRepository;
+import vti.departmentservice.request.department.DepartmentCreateRequest;
+import vti.departmentservice.request.department.DepartmentUpdateRequest;
+import vti.departmentservice.response.account.AccountInfoDto;
+import vti.departmentservice.response.department.DepartmentInfoDto;
+import vti.departmentservice.response.department.DepartmentListDto;
+import vti.departmentservice.service.DepartmentService;
 import vti.common.utils.MessageUtil;
 import vti.common.utils.ObjectMapperUtils;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final DepartmentRepository departmentRepository;
-    private final AccountRepository accountRepository;
     private final MessageSource messageSource;
     private final ObjectMapperUtils objectMapperUtils = new ObjectMapperUtils();
     private static final String DEPARTMENT_ID_NOT_EXISTS = "department.id.not.exists";
     private static final String DEPARTMENT_NAME_EXISTS = "department.name.exists";
+    private static final String DEPARTMENT_ID_EXISTS_IN_ACCOUNT = "department.id.exists.reference.key.account";
+
+    private final AccountClient accountClient;
 
     @Override
     public PageResponse<DepartmentListDto> getAll(Pageable pageable, String search) {
@@ -70,10 +73,22 @@ public class DepartmentServiceImpl implements DepartmentService {
         if (department == null) {
             throw new NotFoundException(MessageUtil.getMessage(DEPARTMENT_ID_NOT_EXISTS));
         }
-        List<Account> accounts = accountRepository.findByDepartment_DepartmentId(id);
-        if (accounts != null && !accounts.isEmpty()) {
-            throw new NotFoundException(MessageUtil.getMessage("department.id.exists.reference.key.account"));
+
+        List<AccountInfoDto> accountInfos = accountClient.getAccountInfos(id);
+        if (accountInfos != null && !accountInfos.isEmpty()) {
+            throw new NotFoundException(MessageUtil.getMessage(DEPARTMENT_ID_EXISTS_IN_ACCOUNT));
         }
         departmentRepository.delete(department);
+    }
+
+    @Override
+    public List<DepartmentInfoDto> getDepartmentsByIds(List<Integer> ids) {
+        return departmentRepository.findAllById(ids)
+                .stream()
+                .map(dept -> DepartmentInfoDto.builder()
+                        .departmentId(dept.getDepartmentId())
+                        .departmentName(dept.getDepartmentName())
+                        .build())
+                .toList();
     }
 }

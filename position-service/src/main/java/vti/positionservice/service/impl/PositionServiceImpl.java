@@ -8,8 +8,11 @@ import vti.common.payload.PageResponse;
 import vti.common.utils.ObjectMapperUtils;
 import vti.positionservice.model.Position;
 import vti.positionservice.repository.PositionRepository;
+import vti.positionservice.response.PositionInfoDto;
 import vti.positionservice.response.PositionListDto;
 import vti.positionservice.service.PositionService;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +23,18 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public PageResponse<PositionListDto> getAll(Pageable pageable, String search) {
-        Page<Position> positions = positionRepository.findAll(pageable,search);
+        Page<Position> positions = positionRepository.findAll(pageable, search);
         return new PageResponse<>(objectMapperUtils.mapEntityPageIntoDtoPage(positions, PositionListDto.class));
+    }
+
+    @Override
+    public List<PositionInfoDto> getPositionsByIds(List<Integer> ids) {
+        return positionRepository.findAllById(ids)
+                .stream()
+                .map(pos -> PositionInfoDto.builder()
+                        .positionId(pos.getPositionId())
+                        .positionName(pos.getPositionName())
+                        .build())
+                .toList();
     }
 }

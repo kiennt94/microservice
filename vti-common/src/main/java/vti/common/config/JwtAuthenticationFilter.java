@@ -12,7 +12,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import vti.common.dto.AccountDto;
-import vti.common.dto.AccountMapper;
 import vti.common.exception_handler.NotFoundException;
 import vti.common.payload.ApiError;
 import vti.common.service.CommonAccountService;
@@ -28,7 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final CommonAccountService accountService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
@@ -51,13 +50,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                AccountDto account = this.accountService.findByUsername(username, jwt);
-                account = AccountMapper.toDto(account);
+                AccountDto account = this.accountService.findByUsername(jwt);
                 if (jwtService.isTokenValid(jwt, account)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             account,
                             null,
-                            account.getAuthorities()
+                            account.getRole().getAuthorities()
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);

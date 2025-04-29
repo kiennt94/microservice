@@ -1,4 +1,4 @@
-package vti.accountmanagement.controller;
+package vti.departmentservice.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,12 +15,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import vti.common.payload.PageResponse;
-import vti.accountmanagement.request.department.DepartmentCreateRequest;
-import vti.accountmanagement.request.department.DepartmentUpdateRequest;
-import vti.accountmanagement.response.dto.department.DepartmentListDto;
-import vti.accountmanagement.service.DepartmentService;
+import vti.departmentservice.request.department.DepartmentCreateRequest;
+import vti.departmentservice.request.department.DepartmentUpdateRequest;
+import vti.departmentservice.response.department.DepartmentInfoDto;
+import vti.departmentservice.response.department.DepartmentListDto;
+import vti.departmentservice.service.DepartmentService;
 import vti.common.utils.ConstantUtils;
 import vti.common.utils.SortUtils;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/department")
@@ -94,5 +97,10 @@ public class DepartmentController {
     ) {
         departmentService.delete(id);
         return ResponseEntity.ok(ConstantUtils.DELETE_SUCCESSFULLY);
+    }
+
+    @PostMapping("/by-ids")
+    public List<DepartmentInfoDto> getDepartmentsByIds(@RequestBody List<Integer> ids) {
+        return departmentService.getDepartmentsByIds(ids);
     }
 }

@@ -23,6 +23,8 @@ import vti.common.utils.SortUtils;
 import vti.common.dto.AccountDto;
 import vti.common.payload.PageResponse;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/account")
 @AllArgsConstructor
@@ -34,7 +36,7 @@ public class AccountController {
 
     @GetMapping("")
     @Operation(summary = "Get a list of accounts", description = "Retrieve a paginated list of accounts with optional search and sorting.")
-    public ResponseEntity<PageResponse<AccountListDto>> getDepartment(
+    public ResponseEntity<PageResponse<AccountListDto>> getAccounts(
             @Parameter(description = "Page number (starting from 0)")
             @Min(value = 0, message = "Page must not be less than 0")
             @RequestParam(defaultValue = "0") Integer page,
@@ -99,8 +101,13 @@ public class AccountController {
         return ResponseEntity.ok(accountService.auth(request));
     }
 
+    @GetMapping("/department")
+    public ResponseEntity<List<AccountInfoDto>> getAccountByDepartmentId(@RequestParam Integer departmentId) {
+        return ResponseEntity.ok(accountService.getAccountByDepartmentId(departmentId));
+    }
+
     @GetMapping("/username")
-    public ResponseEntity<AccountDto> findByUsername(@RequestParam String username, @RequestHeader(value = "Authorization") String token) {
-        return ResponseEntity.ok(accountService.findByUsername(username, token));
+    public ResponseEntity<AccountDto> findByUsername(@RequestHeader(value = "Authorization") String token) {
+        return ResponseEntity.ok(accountService.findByUsername(token));
     }
 }

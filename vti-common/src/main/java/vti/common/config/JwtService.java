@@ -40,7 +40,7 @@ public class JwtService {
         extraClaims.put("fullName", account.getFullName());
 
         // Nếu bạn chỉ dùng 1 role:
-        extraClaims.put("role", account.getAuthorities().stream()
+        extraClaims.put("role", account.getRole().getAuthorities().stream()
                 .findFirst()
                 .map(GrantedAuthority::getAuthority)
                 .orElse(Role.USER.name()));
@@ -88,8 +88,8 @@ public class JwtService {
         return (username.equals(account.getUsername())) && isTokenExpired(token);
     }
 
-    public boolean isTokenValid(String token, String username) {
-        return isTokenExpired(token) && username.equals(extractUsername(token));
+    public boolean isTokenValid(String token) {
+        return isTokenExpired(token);
     }
 
 

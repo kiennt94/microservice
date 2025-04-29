@@ -1,11 +1,11 @@
-package vti.accountmanagement.repository;
+package vti.departmentservice.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import vti.accountmanagement.model.Department;
+import vti.departmentservice.model.Department;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Integer> {

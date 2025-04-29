@@ -1,4 +1,4 @@
-package vti.accountmanagement.response.dto.department;
+package vti.departmentservice.response.department;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

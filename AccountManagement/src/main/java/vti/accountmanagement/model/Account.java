@@ -1,6 +1,5 @@
 package vti.accountmanagement.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -34,6 +33,9 @@ public class Account implements Serializable {
     @Column(nullable = false, unique = true, name = "PositionId")
     Integer positionId;
 
+    @Column(nullable = false, unique = true, name = "DepartmentId")
+    Integer departmentId;
+
     @Column(nullable = false, unique = true, name = "username")
     String username;
 
@@ -49,11 +51,6 @@ public class Account implements Serializable {
     @CreatedDate
     @Column(name = "CreateDate")
     LocalDateTime createDate;
-
-    @ManyToOne
-    @JoinColumn(name = "DepartmentID")
-    @JsonBackReference
-    Department department;
 
     @Enumerated(EnumType.STRING)
     Role role;

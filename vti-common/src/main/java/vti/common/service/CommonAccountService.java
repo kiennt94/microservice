@@ -5,5 +5,5 @@ import vti.common.dto.AccountDto;
 
 @Service
 public interface CommonAccountService {
-    AccountDto findByUsername(String username, String token);
+    AccountDto findByUsername(String token);
 }

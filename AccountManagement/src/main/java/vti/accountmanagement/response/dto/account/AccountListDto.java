@@ -1,9 +1,8 @@
 package vti.accountmanagement.response.dto.account;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vti.common.enums.PositionName;
 import vti.common.enums.Role;
 
 import java.time.LocalDateTime;
@@ -11,13 +10,18 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class AccountListDto {
     int accountId;
-    String email;
     String username;
+    String email;
     String fullName;
     LocalDateTime createDate;
-    String departmentName;
-    String positionName;
     Role role;
+    int departmentId;
+    String departmentName;
+    int positionId;
+    PositionName positionName;
 }

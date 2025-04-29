@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer> {
-    List<Account> findByDepartment_DepartmentId(int id);
 
     Optional<Account> findByUsername(String username);
 
@@ -25,9 +24,9 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Query(value = "SELECT acc FROM Account acc " +
             "WHERE acc.username LIKE %:search% " +
             "OR acc.fullName LIKE %:search% " +
-            "OR acc.email LIKE %:search% " +
-            "OR acc.department.departmentName LIKE %:search% "
+            "OR acc.email LIKE %:search% "
     )
     Page<Account> findAll(Pageable pageable, String search);
 
+    List<Account> findAllByDepartmentId(int id);
 }
