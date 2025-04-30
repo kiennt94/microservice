@@ -13,7 +13,11 @@ import vti.common.config.JwtAccessDeniedHandler;
 import vti.common.config.JwtAuthenticationEntryPoint;
 import vti.common.config.JwtAuthenticationFilter;
 
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+import static vti.common.enums.Permission.ADMIN_READ;
+import static vti.common.enums.Role.ADMIN;
+import static vti.common.enums.Role.USER;
 
 @Configuration
 @EnableWebSecurity
@@ -37,6 +41,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
+                                // Chỉ những ai có ROLE_ADMIN hoặc ROLE_USER mới vào được endpoint /api/department/**
+                                .requestMatchers("/api/department/**").hasAnyRole(ADMIN.name(), USER.name())
+                                // Trong đó, nếu là GET thì cần thêm quyền admin:read
+                                .requestMatchers(GET, "/api/department/**").hasAuthority(ADMIN_READ.name())
                                 .anyRequest()
                                 .authenticated()
                 )

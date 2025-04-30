@@ -12,4 +12,5 @@ import java.util.List;
 public interface PositionService {
     PageResponse<PositionListDto> getAll(Pageable pageable, String search);
     List<PositionInfoDto> getPositionsByIds(List<Integer> ids);
+    PositionInfoDto getPositionById(Integer id);
 }

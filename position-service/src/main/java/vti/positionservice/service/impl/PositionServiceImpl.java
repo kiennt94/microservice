@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import vti.common.exception_handler.NotFoundException;
 import vti.common.payload.PageResponse;
+import vti.common.utils.ConstantUtils;
+import vti.common.utils.MessageUtil;
 import vti.common.utils.ObjectMapperUtils;
 import vti.positionservice.model.Position;
 import vti.positionservice.repository.PositionRepository;
@@ -36,5 +39,14 @@ public class PositionServiceImpl implements PositionService {
                         .positionName(pos.getPositionName())
                         .build())
                 .toList();
+    }
+
+    @Override
+    public PositionInfoDto getPositionById(Integer id) {
+        Position position = positionRepository.findById(id).orElse(null);
+        if (position == null) {
+            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.POSITION_ID_NOT_EXISTS));
+        }
+        return objectMapperUtils.map(position, PositionInfoDto.class);
     }
 }

@@ -147,10 +147,4 @@ public class ExceptionHandlerConfig {
         log.error(ConstantUtils.CUSTOM_EXCEPTION, ex.getMessage(), ex);
         return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
     }
-
-//    xu ly service goi service quang exception long nhau
-    @ExceptionHandler(CustomApiException.class)
-    public ResponseEntity<ApiError> handleCustomApiException(CustomApiException ex) {
-        return ResponseEntity.status(ex.getApiError().getStatus()).body(ex.getApiError());
-    }
 }

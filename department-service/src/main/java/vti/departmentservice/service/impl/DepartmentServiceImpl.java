@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vti.common.exception_handler.NotFoundException;
 import vti.common.exception_handler.DuplicateException;
-import vti.departmentservice.client.AccountClient;
+import vti.common.utils.ConstantUtils;
+import vti.departmentservice.client.AccountServiceClient;
 import vti.departmentservice.model.Department;
 import vti.common.payload.PageResponse;
 import vti.departmentservice.repository.DepartmentRepository;
@@ -30,11 +31,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepository departmentRepository;
     private final MessageSource messageSource;
     private final ObjectMapperUtils objectMapperUtils = new ObjectMapperUtils();
-    private static final String DEPARTMENT_ID_NOT_EXISTS = "department.id.not.exists";
-    private static final String DEPARTMENT_NAME_EXISTS = "department.name.exists";
-    private static final String DEPARTMENT_ID_EXISTS_IN_ACCOUNT = "department.id.exists.reference.key.account";
 
-    private final AccountClient accountClient;
+    private final AccountServiceClient accountServiceClient;
 
     @Override
     public PageResponse<DepartmentListDto> getAll(Pageable pageable, String search) {
@@ -48,7 +46,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             Department dep = objectMapperUtils.map(department, Department.class);
             departmentRepository.save(dep);
         } else {
-            throw new DuplicateException(MessageUtil.getMessage(DEPARTMENT_NAME_EXISTS));
+            throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_NAME_EXISTS));
         }
     }
 
@@ -56,13 +54,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     public void update(DepartmentUpdateRequest department) {
         Department dep = departmentRepository.findById(department.getDepartmentId()).orElse(null);
         if (dep == null) {
-            throw new NotFoundException(MessageUtil.getMessage(DEPARTMENT_ID_NOT_EXISTS));
+            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
         }
         if (departmentRepository.findByDepartmentNameAndDepartmentIdNot(department.getDepartmentName(), department.getDepartmentId()) == null) {
             dep = objectMapperUtils.map(department, Department.class);
             departmentRepository.save(dep);
         } else {
-            throw new DuplicateException(MessageUtil.getMessage(DEPARTMENT_NAME_EXISTS));
+            throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_NAME_EXISTS));
         }
     }
 
@@ -71,12 +69,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     public void delete(Integer id) {
         Department department = departmentRepository.findByDepartmentId(id);
         if (department == null) {
-            throw new NotFoundException(MessageUtil.getMessage(DEPARTMENT_ID_NOT_EXISTS));
+            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
         }
 
-        List<AccountInfoDto> accountInfos = accountClient.getAccountInfos(id);
+        List<AccountInfoDto> accountInfos = accountServiceClient.getAccountInfosByDepartmentId(id);
         if (accountInfos != null && !accountInfos.isEmpty()) {
-            throw new NotFoundException(MessageUtil.getMessage(DEPARTMENT_ID_EXISTS_IN_ACCOUNT));
+            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_EXISTS_IN_ACCOUNT));
         }
         departmentRepository.delete(department);
     }
@@ -90,5 +88,14 @@ public class DepartmentServiceImpl implements DepartmentService {
                         .departmentName(dept.getDepartmentName())
                         .build())
                 .toList();
+    }
+
+    @Override
+    public DepartmentInfoDto getDepartmentById(Integer id) {
+        Department department = departmentRepository.findById(id).orElse(null);
+        if (department == null) {
+            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
+        }
+        return objectMapperUtils.map(department, DepartmentInfoDto.class);
     }
 }

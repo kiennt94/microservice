@@ -16,8 +16,23 @@
 		<dependency>
 			<groupId>vti</groupId>
 			<artifactId>vti-common</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>vti</groupId>
+			<artifactId>common-service</artifactId>
+		</dependency>
+<!--	Spring Cloud Gateway sẽ không thể tự động khám phá eureka	-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
 	</dependencies>
+
 
 	<build>
 		<plugins>

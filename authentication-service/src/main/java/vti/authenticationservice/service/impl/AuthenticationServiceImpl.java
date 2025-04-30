@@ -2,11 +2,10 @@ package vti.authenticationservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import vti.authenticationservice.client.AccountClient;
+import vti.authenticationservice.client.AccountServiceClient;
 import vti.authenticationservice.request.AuthenticationRequest;
 import vti.authenticationservice.response.AuthenticationResponse;
 import vti.authenticationservice.service.AuthenticationService;
@@ -18,16 +17,13 @@ import vti.common.dto.AccountDto;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final AccountClient accountClient;
+    private final AccountServiceClient accountServiceClient;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${account.service.url}")
-    private String accountServiceUrl;
-
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         log.debug("Authenticating user: {}", request.getUsername());
-        AccountDto account = accountClient.getAccountDto(request);
+        AccountDto account = accountServiceClient.authenticate(request);
         if (account == null || !passwordEncoder.matches(request.getPassword(), account.getPassword())) {
             throw new BadCredentialsException("Account not found");
         }

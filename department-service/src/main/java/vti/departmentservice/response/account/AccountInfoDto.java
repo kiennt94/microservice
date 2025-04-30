@@ -2,8 +2,11 @@ package vti.departmentservice.response.account;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vti.common.enums.PositionName;
+import vti.common.enums.Role;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -12,10 +15,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AccountInfoDto {
     int accountId;
-    String email;
     String username;
+    String email;
     String fullName;
-    LocalDate createDate;
+    LocalDateTime createDate;
+    Role role;
+    int departmentId;
     String departmentName;
-    String positionName;
+    int positionId;
+    PositionName positionName;
 }

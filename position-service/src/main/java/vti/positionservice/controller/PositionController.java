@@ -55,7 +55,12 @@ public class PositionController {
     }
 
     @PostMapping("/by-ids")
-    public List<PositionInfoDto> getPositionsByIds(@RequestBody List<Integer> ids) {
-        return positionService.getPositionsByIds(ids);
+    public ResponseEntity<List<PositionInfoDto>> getPositionsByIds(@RequestBody List<Integer> ids) {
+        return ResponseEntity.ok(positionService.getPositionsByIds(ids));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PositionInfoDto> getPositionById(@PathVariable Integer id) {
+        return ResponseEntity.ok(positionService.getPositionById(id));
     }
 }

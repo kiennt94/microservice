@@ -85,7 +85,7 @@ public class DepartmentController {
         return ResponseEntity.ok(ConstantUtils.UPDATE_SUCCESSFULLY);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "Delete a department", description = "Remove a department by its ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Department deleted successfully"),
@@ -100,7 +100,12 @@ public class DepartmentController {
     }
 
     @PostMapping("/by-ids")
-    public List<DepartmentInfoDto> getDepartmentsByIds(@RequestBody List<Integer> ids) {
-        return departmentService.getDepartmentsByIds(ids);
+    public ResponseEntity<List<DepartmentInfoDto>> getDepartmentsByIds(@RequestBody List<Integer> ids) {
+        return ResponseEntity.ok(departmentService.getDepartmentsByIds(ids));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DepartmentInfoDto> getDepartmentById(@PathVariable Integer id) {
+        return ResponseEntity.ok(departmentService.getDepartmentById(id));
     }
 }

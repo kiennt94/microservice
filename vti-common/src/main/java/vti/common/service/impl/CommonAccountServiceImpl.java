@@ -16,8 +16,8 @@ import vti.common.service.CommonAccountService;
 public class CommonAccountServiceImpl implements CommonAccountService {
 
     private final RestTemplate restTemplate;
-    @Value("${account.service.find.username.url}")
-    private String accountServiceFindUsernameUrl;
+    @Value("${account.service.url}")
+    private String accountServiceUrl;
 
     @Override
     public AccountDto findByUsername(String token) {
@@ -28,7 +28,7 @@ public class CommonAccountServiceImpl implements CommonAccountService {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         ResponseEntity<AccountDto> response = restTemplate.exchange(
-                accountServiceFindUsernameUrl,
+                accountServiceUrl + "/username",
                 HttpMethod.GET,
                 entity,
                 AccountDto.class

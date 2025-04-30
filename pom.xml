@@ -12,11 +12,14 @@
 
     <!-- Các module con trong dự án -->
     <modules>
-        <module>AccountManagement</module>
+        <module>account-service</module>
         <module>authentication-service</module>
         <module>position-service</module>
         <module>department-service</module>
         <module>vti-common</module>
+        <module>common-service</module>
+        <module>gateway-service</module>
+        <module>eureka-server</module>
     </modules>
     <properties>
         <java.version>17</java.version>
@@ -105,8 +108,22 @@
         </dependency>
         <!-- Các dependency chung khác, nếu có -->
     </dependencies>
+
     <dependencyManagement>
         <dependencies>
+            <!-- Spring Cloud BOM -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2023.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>vti</groupId>
+                <artifactId>common-service</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
             <dependency>
                 <groupId>vti</groupId>
                 <artifactId>vti-common</artifactId>
@@ -121,6 +138,14 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>spring-releases</id>
+            <url>https://repo.spring.io/release</url>
+        </repository>
+    </repositories>
+
     <!-- Plugin cho việc build dự án -->
     <build>
         <pluginManagement>
@@ -152,11 +177,11 @@
                 </plugin>
 
                 <!-- Maven Surefire Plugin (for running tests) -->
-<!--                <plugin>-->
-<!--                    <groupId>org.apache.maven.plugins</groupId>-->
-<!--                    <artifactId>maven-surefire-plugin</artifactId>-->
-<!--                    <version>3.0.0-M5</version>-->
-<!--                </plugin>-->
+                <!-- <plugin> -->
+                <!--     <groupId>org.apache.maven.plugins</groupId> -->
+                <!--     <artifactId>maven-surefire-plugin</artifactId> -->
+                <!--     <version>3.0.0-M5</version> -->
+                <!-- </plugin> -->
 
                 <!-- JaCoCo Maven Plugin (for code coverage) -->
                 <plugin>

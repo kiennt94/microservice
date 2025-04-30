@@ -18,4 +18,5 @@ public interface DepartmentService {
     void update(DepartmentUpdateRequest department);
     void delete(Integer id);
     List<DepartmentInfoDto> getDepartmentsByIds(List<Integer> ids);
+    DepartmentInfoDto getDepartmentById(Integer id);
 }

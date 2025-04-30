@@ -6,8 +6,8 @@
     <parent>
         <groupId>vti</groupId>
         <artifactId>microservice</artifactId>
-        <version>1.0-SNAPSHOT</version> <!-- Cùng phiên bản với pom cha -->
-        <relativePath>../pom.xml</relativePath> <!-- Đường dẫn tới pom cha -->
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>vti-common</artifactId>
@@ -16,6 +16,7 @@
     <name>vti-common</name>
 
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
