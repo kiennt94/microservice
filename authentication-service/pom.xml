@@ -36,6 +36,13 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>vti.authenticationservice.AuthenticationServiceApplication</mainClass>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

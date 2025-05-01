@@ -34,6 +34,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
+            <version>4.1.4</version>
         </dependency>
 
         <dependency>
@@ -73,6 +74,15 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>vti.gatewayservice.GatewayServiceApplication</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 </project>

@@ -2,7 +2,12 @@
   <dictionary name="project">
     <words>
       <w>accountservice</w>
+      <w>authenticationservice</w>
       <w>commonservice</w>
+      <w>departmentservice</w>
+      <w>eurekaserver</w>
+      <w>gatewayservice</w>
+      <w>positionservice</w>
     </words>
   </dictionary>
 </component>
