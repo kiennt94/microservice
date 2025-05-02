@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: account-service
+  config:
+    import: optional:classpath:common-application.properties
+
+swagger:
+  packages-to-scan: vti.account-service
+
+openapi:
+  service:
+    server: ${common.address}:${server.port}
+
+logging:
+  level:
+    vti.accountservice: DEBUG
+    org.springframework: INFO
+
+
