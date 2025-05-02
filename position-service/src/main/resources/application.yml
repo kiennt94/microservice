@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: position-service
+
+server:
+  port: 8083
+
+swagger:
+  packages-to-scan: vti.positionservice
+
+openapi:
+  service:
+    server: ${common.address}:${server.port}
+

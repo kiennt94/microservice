@@ -1,0 +1,11 @@
+eureka:
+  client:
+    use-dns-for-fetching-service-urls: false
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+    region: default
+  instance:
+    hostname: api-gateway
+    prefer-ip-address: true

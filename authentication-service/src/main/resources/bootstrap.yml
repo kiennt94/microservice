@@ -1,6 +1,6 @@
 spring:
   application:
-    name: account-service
+    name: position-service
   profiles:
     active: ${common.env}
   config:
@@ -12,6 +12,3 @@ spring:
       password: admin
     discovery:
       enabled: true
-logging:
-  level:
-    com.netflix.discovery: DEBUG

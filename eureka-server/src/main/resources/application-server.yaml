@@ -1,4 +1,0 @@
-eureka:
-  instance:
-    hostname: eureka-server
-    prefer-ip-address: false

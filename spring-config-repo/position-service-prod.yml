@@ -17,8 +17,7 @@ spring:
           time_zone: UTC
 eureka:
   instance:
-    prefer-ip-address: true
-    hostname: account-service
+    prefer-ip-address: false
   client:
     service-url:
       defaultZone: http://192.168.1.99:8761/eureka

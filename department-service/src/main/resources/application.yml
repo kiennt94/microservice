@@ -1,12 +1,12 @@
 server:
-  port: 8081
+  port: 8084
 
 spring:
   application:
-    name: account-service
+    name: department-service
 
 swagger:
-  packages-to-scan: vti.account-service
+  packages-to-scan: vti.department-service
 
 openapi:
   service:

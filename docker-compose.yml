@@ -12,6 +12,12 @@ services:
       dockerfile: ./config-server/docker/Dockerfile
     image: config-server
     container_name: config-server
+    volumes:
+      - /d/microservice/spring-config-repo:/config-repo
+      - /d/microservice/spring-config-repo/eureka-server:/config-repo/eureka-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=native
+      - CONFIG_REPO_LOCATION=file:/config-repo,file:/config-repo/eureka-server
     ports:
       - "8888:8888"
     networks:
@@ -23,8 +29,6 @@ services:
       dockerfile: ./eureka-server/docker/Dockerfile
     image: eureka-server
     container_name: eureka-server
-    environment:
-      - SPRING_PROFILES_ACTIVE=server
     ports:
       - "8761:8761"
     depends_on:
@@ -39,15 +43,13 @@ services:
       dockerfile: ./gateway-service/docker/Dockerfile
     image: api-gateway
     container_name: api-gateway
-    environment:
-      - SPRING_PROFILES_ACTIVE=server
     ports:
       - "8080:8080"
     depends_on:
       - eureka-server
     networks:
       - app-network
-    entrypoint: ["sh", "-c", "until curl -s http://eureka-server:8761/eureka/apps; do echo 'Waiting for Eureka...'; sleep 5; done; java -jar /app.jar"]
+    entrypoint: ["sh", "-c", "until curl -s http://eureka-server:8761/actuator/health; do echo 'Waiting for Eureka...'; sleep 5; done; java -jar /app.jar"]
 
   account-service:
     build:
@@ -61,8 +63,8 @@ services:
       - api-gateway
     networks:
       - app-network
-    entrypoint: ["sh", "-c", "until curl -s http://api-gateway:8080/actuator/health; do echo 'Waiting for API Gateway...'; sleep 5; done; java -jar /app.jar"]
-#
+    entrypoint: ["sh", "-c", "until curl -s http://api-gateway:8080/actuator/health; do echo 'Waiting for Api Gateway...'; sleep 5; done; java -jar /app.jar"]
+
 #  authentication-service:
 #    build:
 #      context: .
