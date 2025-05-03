@@ -1,6 +1,6 @@
 spring:
   application:
-    name: position-service
+    name: authentication-service
   profiles:
     active: ${common.env}
   config:

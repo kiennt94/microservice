@@ -1,20 +1,14 @@
 spring:
   application:
     name: api-gateway
-  profiles:
-    active: prod
-  config:
-    import: optional:configserver
   cloud:
+    config:
+      enabled: false
     gateway:
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
-    config:
-      uri: 192.168.1.99:8888
-      username: admin
-      password: admin
     discovery:
       enabled: true
   main:
@@ -41,6 +35,7 @@ eureka:
     use-dns-for-fetching-service-urls: false
     service-url:
       defaultZone: http://eureka-server:8761/eureka
+#      defaultZone: http://192.168.1.99:8761/eureka
     register-with-eureka: true
     fetch-registry: true
     region: default

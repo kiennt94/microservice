@@ -2,7 +2,7 @@ spring:
   application:
     name: department-service
   profiles:
-    active: dev
+    active: ${common.env}
   config:
     import: optional:configserver,optional:classpath:common-application.properties
   cloud:
