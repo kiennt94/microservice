@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import vti.common.enums.Role;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -36,14 +35,11 @@ public class Account implements Serializable {
     @Column(nullable = false, unique = true, name = "DepartmentId")
     Integer departmentId;
 
-    @Column(nullable = false, unique = true, name = "username")
-    String username;
-
-    @Column(name = "password")
-    String password;
-
     @Column(nullable = false, unique = true, name = "email")
     String email;
+
+    @Column(nullable = false, unique = true, name = "keycloakUserId")
+    String keycloakUserId;
 
     @Column(name = "FullName")
     String fullName;
@@ -51,8 +47,5 @@ public class Account implements Serializable {
     @CreatedDate
     @Column(name = "CreateDate")
     LocalDateTime createDate;
-
-    @Enumerated(EnumType.STRING)
-    Role role;
 
 }

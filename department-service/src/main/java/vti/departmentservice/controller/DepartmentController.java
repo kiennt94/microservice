@@ -29,14 +29,13 @@ import java.util.List;
 @RequestMapping("/api/department")
 @AllArgsConstructor
 @Validated
-@PreAuthorize("hasAnyRole('ADMIN','USER')")
 @Tag(name = "Department", description = "API for managing departments")
 public class DepartmentController {
 
     private final DepartmentService departmentService;
 
     @GetMapping("")
-    @PreAuthorize("hasAuthority('admin:read')")
+    @PreAuthorize("hasAuthority('department:read')")
     @Operation(summary = "Get paginated list of departments", description = "Retrieve departments with optional pagination, sorting, and keyword filtering.")
     public ResponseEntity<PageResponse<DepartmentListDto>> getDepartment(
             @Parameter(description = "Page number (0-based)")
@@ -91,6 +90,7 @@ public class DepartmentController {
             @ApiResponse(responseCode = "200", description = "Department deleted successfully"),
             @ApiResponse(responseCode = "404", description = "Department not found")
     })
+    @PreAuthorize("hasAuthority('department:delete')")
     public ResponseEntity<String> deleteDepartment(
             @Parameter(description = "ID of the department to delete")
             @PathVariable Integer id

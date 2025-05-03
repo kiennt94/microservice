@@ -15,27 +15,17 @@ spring:
     web-application-type: reactive
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-
-logging:
-  level:
-    org.springframework.boot.context.config: DEBUG
-    org.springframework.cloud.config: DEBUG
-    com.netflix.discovery: DEBUG
-
-server:
-  port: 8080
-
-application:
   security:
-    jwt:
-      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-      expiration: 86400000
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://192.168.1.99:8000/realms/testing-system
 eureka:
   client:
     use-dns-for-fetching-service-urls: false
     service-url:
-      defaultZone: http://eureka-server:8761/eureka
-#      defaultZone: http://192.168.1.99:8761/eureka
+#      defaultZone: http://eureka-server:8761/eureka
+      defaultZone: http://192.168.1.99:8761/eureka
     register-with-eureka: true
     fetch-registry: true
     region: default

@@ -8,22 +8,18 @@ import org.springframework.stereotype.Repository;
 import vti.accountservice.model.Account;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Integer> {
 
-    Optional<Account> findByUsername(String username);
 
     Boolean existsAccountByEmail(String email);
 
-    Boolean existsAccountByUsername(String username);
 
     Boolean existsAccountByEmailAndAccountIdNot(String email, int id);
 
     @Query(value = "SELECT acc FROM Account acc " +
-            "WHERE acc.username LIKE %:search% " +
-            "OR acc.fullName LIKE %:search% " +
+            "WHERE acc.fullName LIKE %:search% " +
             "OR acc.email LIKE %:search% "
     )
     Page<Account> findAll(Pageable pageable, String search);

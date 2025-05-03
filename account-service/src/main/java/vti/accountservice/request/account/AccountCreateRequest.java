@@ -12,7 +12,6 @@ import org.hibernate.validator.constraints.Length;
 import vti.common.anotation.FormatWhiteSpace;
 import vti.common.anotation.Trim;
 import vti.common.anotation.ValidateEnum;
-import vti.common.enums.Role;
 
 @Getter
 @Setter
@@ -46,12 +45,6 @@ public class AccountCreateRequest {
     @Length(min = 6, max = 20, message = "{account.password.length}")
     @Schema(description = "Password with 6-20 characters", example = "securePass123")
     String password;
-
-    @ValidateEnum(enumClass = Role.class, name = "role", message = "{account.role.not.exists}")
-    @NotNull(message = "{account.role.required}")
-    @NotBlank(message = "{account.role.required}")
-    @Schema(description = "Role of the account, must be one of the defined roles (e.g., ADMIN, USER)", example = "USER")
-    String role;
 
     @Schema(description = "Department ID that the account belongs to", example = "1")
     int departmentId;

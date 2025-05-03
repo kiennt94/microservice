@@ -11,9 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "vti.departmentservice.client")
 public class DepartmentServiceApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(DepartmentServiceApplication.class, args);
 	}
-
 }

@@ -4,10 +4,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vti.accountservice.request.account.AccountCreateRequest;
 import vti.accountservice.request.account.AccountUpdateRequest;
-import vti.accountservice.request.authenticate.AuthenticationRequest;
 import vti.accountservice.response.dto.account.AccountInfoDto;
 import vti.accountservice.response.dto.account.AccountListDto;
-import vti.common.dto.AccountDto;
 import vti.common.payload.PageResponse;
 
 import java.util.List;
@@ -20,7 +18,5 @@ public interface AccountService  {
     void save(AccountCreateRequest account);
     void update(AccountUpdateRequest account);
     void delete(Integer id);
-    AccountDto auth(AuthenticationRequest request);
-    AccountDto findByUsername(String token);
     List<AccountInfoDto> getAccountByDepartmentId(int departmentId);
 }

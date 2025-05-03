@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vti.accountservice.client.DepartmentServiceClient;
@@ -13,16 +12,12 @@ import vti.accountservice.model.Account;
 import vti.accountservice.repository.AccountRepository;
 import vti.accountservice.request.account.AccountCreateRequest;
 import vti.accountservice.request.account.AccountUpdateRequest;
-import vti.accountservice.request.authenticate.AuthenticationRequest;
 import vti.accountservice.response.dto.account.AccountInfoDto;
 import vti.accountservice.response.dto.account.AccountListDto;
 import vti.accountservice.response.dto.department.DepartmentInfoDto;
 import vti.accountservice.response.dto.position.PositionInfoDto;
 import vti.accountservice.service.AccountService;
-import vti.common.config.JwtService;
-import vti.common.dto.AccountDto;
 import vti.common.enums.PositionName;
-import vti.common.enums.Role;
 import vti.common.exception_handler.DuplicateException;
 import vti.common.exception_handler.NotFoundException;
 import vti.common.payload.PageResponse;
@@ -41,7 +36,6 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final ObjectMapperUtils objectMapperUtils = new ObjectMapperUtils();
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
     private final PositionServiceClient positionServiceClient;
     private final DepartmentServiceClient departmentServiceClient;
 
@@ -85,11 +79,9 @@ public class AccountServiceImpl implements AccountService {
                     PositionName positionName = positionMap.get(account.getPositionId());
                     return AccountListDto.builder()
                             .accountId(account.getAccountId())
-                            .username(account.getUsername())
                             .email(account.getEmail())
                             .fullName(account.getFullName())
                             .createDate(account.getCreateDate())
-                            .role(account.getRole())
                             .departmentId(account.getDepartmentId())
                             .departmentName(departmentName)
                             .positionId(account.getPositionId())
@@ -122,9 +114,9 @@ public class AccountServiceImpl implements AccountService {
         if (Boolean.TRUE.equals(accountRepository.existsAccountByEmail(account.getEmail()))) {
             throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_EMAIL_EXISTS));
         }
-        if (Boolean.TRUE.equals(accountRepository.existsAccountByUsername(account.getUsername()))) {
-            throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_USERNAME_EXISTS));
-        }
+//        if (Boolean.TRUE.equals(accountRepository.existsAccountByUsername(account.getUsername()))) {
+//            throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_USERNAME_EXISTS));
+//        }
         if (positionServiceClient.getPositionById(account.getPositionId()) == null) {
             throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.POSITION_ID_NOT_EXISTS));
         }
@@ -133,8 +125,6 @@ public class AccountServiceImpl implements AccountService {
         }
 
         Account acc = objectMapperUtils.map(account, Account.class);
-        acc.setPassword(passwordEncoder.encode(acc.getPassword()));
-        acc.setRole(Role.valueOf(account.getRole().toUpperCase()));
         accountRepository.save(acc);
     }
 
@@ -165,30 +155,6 @@ public class AccountServiceImpl implements AccountService {
             throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_ID_NOT_EXISTS));
         }
         accountRepository.delete(acc);
-    }
-
-    @Override
-    public AccountDto auth(AuthenticationRequest request) {
-        Account account = accountRepository.findByUsername(request.getUsername()).orElse(null);
-        if (account == null || !passwordEncoder.matches(request.getPassword(), account.getPassword())) {
-            return null;
-        }
-        return objectMapperUtils.map(account, AccountDto.class);
-    }
-
-    @Override
-    public AccountDto findByUsername(String token) {
-        if (token.contains("Bearer ")) {
-            token = token.replace("Bearer ", "");
-        }
-        if (!jwtService.isTokenValid(token)) {
-            throw new BadCredentialsException("Invalid or expired token");
-        }
-        Account account = accountRepository.findByUsername(jwtService.extractUsername(token)).orElse(null);
-        if (account == null) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_USERNAME_NOT_EXISTS));
-        }
-        return objectMapperUtils.map(account, AccountDto.class);
     }
 
     @Override

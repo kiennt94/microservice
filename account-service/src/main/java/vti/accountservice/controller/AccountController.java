@@ -14,13 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import vti.accountservice.repository.AccountRepository;
 import vti.accountservice.request.account.AccountCreateRequest;
 import vti.accountservice.request.account.AccountUpdateRequest;
-import vti.accountservice.request.authenticate.AuthenticationRequest;
 import vti.accountservice.response.dto.account.AccountInfoDto;
 import vti.accountservice.response.dto.account.AccountListDto;
 import vti.accountservice.service.AccountService;
 import vti.common.utils.ConstantUtils;
 import vti.common.utils.SortUtils;
-import vti.common.dto.AccountDto;
 import vti.common.payload.PageResponse;
 
 import java.util.List;
@@ -96,18 +94,8 @@ public class AccountController {
         return ResponseEntity.ok(ConstantUtils.DELETE_SUCCESSFULLY);
     }
 
-    @PostMapping("/auth")
-    public ResponseEntity<AccountDto> getAccountByUsername(@RequestBody @Valid AuthenticationRequest request) {
-        return ResponseEntity.ok(accountService.auth(request));
-    }
-
     @GetMapping("/department")
     public ResponseEntity<List<AccountInfoDto>> getAccountByDepartmentId(@RequestParam Integer departmentId) {
         return ResponseEntity.ok(accountService.getAccountByDepartmentId(departmentId));
-    }
-
-    @GetMapping("/username")
-    public ResponseEntity<AccountDto> findByUsername(@RequestHeader(value = "Authorization") String token) {
-        return ResponseEntity.ok(accountService.findByUsername(token));
     }
 }
