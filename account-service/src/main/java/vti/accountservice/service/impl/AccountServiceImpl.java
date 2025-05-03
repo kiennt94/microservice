@@ -1,6 +1,8 @@
 package vti.accountservice.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +40,10 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final PositionServiceClient positionServiceClient;
     private final DepartmentServiceClient departmentServiceClient;
+    private final KeycloakAdminService keycloakAdminService;
+
+    @Value("${keycloak.realm}")
+    private String realm;
 
     @Override
     public PageResponse<AccountListDto> getAll(Pageable pageable, String search) {
@@ -111,12 +117,15 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void save(AccountCreateRequest account) {
+        JsonNode existingUser = keycloakAdminService.findUserByUsername(account.getUsername()).block();
+        if (existingUser != null) {
+            throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_USERNAME_EXISTS));
+        }
+
         if (Boolean.TRUE.equals(accountRepository.existsAccountByEmail(account.getEmail()))) {
             throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_EMAIL_EXISTS));
         }
-//        if (Boolean.TRUE.equals(accountRepository.existsAccountByUsername(account.getUsername()))) {
-//            throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_USERNAME_EXISTS));
-//        }
+
         if (positionServiceClient.getPositionById(account.getPositionId()) == null) {
             throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.POSITION_ID_NOT_EXISTS));
         }

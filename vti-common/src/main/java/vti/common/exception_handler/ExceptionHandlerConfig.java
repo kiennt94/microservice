@@ -147,4 +147,16 @@ public class ExceptionHandlerConfig {
         log.error(ConstantUtils.CUSTOM_EXCEPTION, ex.getMessage(), ex);
         return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
     }
+
+    //    fix loi feign long exception
+    @ExceptionHandler(HttpResponseException.class)
+    public ResponseEntity<ApiError> handleHttpResponse(HttpResponseException ex, HttpServletRequest request) {
+        ApiError error = new ApiError(
+                ex.getStatus(),
+                ex.getMessage(),
+                ex.getPath()
+        );
+        log.error(ConstantUtils.CUSTOM_EXCEPTION, ex.getMessage(), ex);
+        return new ResponseEntity<>(error, HttpStatus.valueOf(ex.getStatus()));
+    }
 }

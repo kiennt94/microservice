@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 import vti.common.anotation.FormatWhiteSpace;
 import vti.common.anotation.Trim;
-import vti.common.anotation.ValidateEnum;
 
 @Getter
 @Setter
