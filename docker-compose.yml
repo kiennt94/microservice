@@ -50,8 +50,8 @@ services:
       - /d/microservice/spring-config-repo:/config-repo
       - /d/microservice/spring-config-repo/eureka-server:/config-repo/eureka-server
     environment:
-      - SPRING_PROFILES_ACTIVE=native
-      - CONFIG_REPO_LOCATION=file:/config-repo,file:/config-repo/eureka-server
+      - SPRING_PROFILES_ACTIVE=git
+#      - CONFIG_REPO_LOCATION=file:/config-repo,file:/config-repo/eureka-server
     ports:
       - "8888:8888"
     networks:
