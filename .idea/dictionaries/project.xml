@@ -9,8 +9,10 @@
       <w>dskip</w>
       <w>eurekaserver</w>
       <w>gatewayservice</w>
+      <w>karobest</w>
       <w>openzipkin</w>
       <w>positionservice</w>
+      <w>testingsystem</w>
     </words>
   </dictionary>
 </component>

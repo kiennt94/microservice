@@ -26,7 +26,11 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.1
     container_name: keycloak-product
-    command: [ "start-dev" ]
+    command:
+      - start-dev
+      - --hostname=192.168.1.99
+      - --hostname-strict=false
+      - --http-port=8000
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
@@ -34,9 +38,8 @@ services:
       - KC_DB_URL=jdbc:mysql://192.168.1.99:3306/keycloak_testingsystem
       - KC_DB_USERNAME=keycloak_user
       - KC_DB_PASSWORD=091094
-      - KC_HOSTNAME=192.168.1.99
     ports:
-      - "8000:8080"
+      - "8000:8000"
     networks:
       - app-network
 
@@ -131,9 +134,12 @@ services:
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
+      - m2_cache:/root/.m2
     networks:
       - app-network
 
 volumes:
   jenkins_home:
+    external: true
+  m2_cache:
     external: true
