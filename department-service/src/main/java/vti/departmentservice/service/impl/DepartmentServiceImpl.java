@@ -67,6 +67,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     @Transactional
     public void delete(Integer id) {
+        id = 10000;
         Department department = departmentRepository.findByDepartmentId(id);
         if (department == null) {
             throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));

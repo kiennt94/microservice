@@ -16,4 +16,3 @@ logging:
     vti.accountservice: DEBUG
     org.springframework: INFO
 
-

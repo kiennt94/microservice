@@ -50,4 +50,11 @@ public class AccountCreateRequest {
 
     @Schema(description = "Position ID that the account holds", example = "2")
     int positionId;
+
+    @NotNull(message = "{role.required}")
+    @NotBlank(message = "{role.required}")
+    @Length(max = 20, message = "{role.length}")
+    @Trim
+    @Schema(description = "Role, max 20 characters", example = "example")
+    String role;
 }

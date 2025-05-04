@@ -6,8 +6,10 @@
       <w>authenticationservice</w>
       <w>commonservice</w>
       <w>departmentservice</w>
+      <w>dskip</w>
       <w>eurekaserver</w>
       <w>gatewayservice</w>
+      <w>openzipkin</w>
       <w>positionservice</w>
     </words>
   </dictionary>

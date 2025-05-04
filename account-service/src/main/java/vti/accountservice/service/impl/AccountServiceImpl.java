@@ -24,11 +24,13 @@ import vti.common.exception_handler.DuplicateException;
 import vti.common.exception_handler.NotFoundException;
 import vti.common.payload.PageResponse;
 import vti.common.utils.ConstantUtils;
+import vti.common.utils.FilterRole;
 import vti.common.utils.MessageUtil;
 import vti.common.utils.ObjectMapperUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -118,6 +120,13 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void save(AccountCreateRequest account) {
         JsonNode existingUser = keycloakAdminService.findUserByUsername(account.getUsername()).block();
+        List<String> roles = getAllRoles();
+        Optional<String> roleName = roles.stream().filter(role -> role.equals(account.getRole().toLowerCase())).findFirst();
+
+        if (roleName.isEmpty()) {
+            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.ROLE_NOT_EXISTS));
+        }
+
         if (existingUser != null) {
             throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_USERNAME_EXISTS));
         }
@@ -132,9 +141,14 @@ public class AccountServiceImpl implements AccountService {
         if (departmentServiceClient.getDepartmentById(account.getDepartmentId()) == null) {
             throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
         }
-
         Account acc = objectMapperUtils.map(account, Account.class);
-        accountRepository.save(acc);
+
+        keycloakAdminService.createUserOnKeycloak(account.getUsername(), account.getPassword(), account.getRole().toLowerCase())
+                .subscribe(keycloakUserId -> {
+                    acc.setKeycloakUserId(keycloakUserId);
+                    accountRepository.save(acc);
+                });
+
     }
 
     @Override
@@ -170,5 +184,14 @@ public class AccountServiceImpl implements AccountService {
     public List<AccountInfoDto> getAccountByDepartmentId(int departmentId) {
         List<Account> accounts = accountRepository.findAllByDepartmentId(departmentId);
         return objectMapperUtils.mapAll(accounts, AccountInfoDto.class);
+    }
+
+    @Override
+    public List<String> getAllRoles() {
+        List<String> roles = keycloakAdminService.getAllRealmRoles().block();
+        if (roles == null || roles.isEmpty()) {
+            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.ROLES_EMPTY));
+        }
+        return FilterRole.getRootRole(roles);
     }
 }

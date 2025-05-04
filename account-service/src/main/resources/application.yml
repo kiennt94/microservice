@@ -4,7 +4,8 @@ server:
 spring:
   application:
     name: account-service
-
+  main:
+    allow-bean-definition-overriding: true
 swagger:
   packages-to-scan: vti.account-service
 
@@ -14,8 +15,9 @@ openapi:
 
 logging:
   level:
-    vti.accountservice: DEBUG
-    org.springframework: INFO
+    io.github.resilience4j: DEBUG
+    org.springframework.cloud.openfeign: DEBUG
+    vti.accountservice.client.fall_back.DepartmentServiceFallbackFactory: DEBUG
 
 
 keycloak:
@@ -23,3 +25,15 @@ keycloak:
   auth-server-url: http://192.168.1.99:8000
   admin-client-id: microservice-client
   admin-client-secret: 1EECqTgOC8PkuudEKz0K6eK4pg5JoRIT
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      department-service:
+        registerHealthIndicator: true
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 2
+        minimumNumberOfCalls: 1
+

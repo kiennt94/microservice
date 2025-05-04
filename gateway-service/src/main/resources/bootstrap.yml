@@ -5,6 +5,12 @@ spring:
     config:
       enabled: false
     gateway:
+      default-filters:
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 1
+            redis-rate-limiter.burstCapacity: 2
+            key-resolver: "#{@customKeyResolver}"
       discovery:
         locator:
           enabled: true
@@ -19,7 +25,13 @@ spring:
     oauth2:
       resource-server:
         jwt:
-          issuer-uri: http://192.168.1.99:8000/realms/testing-system
+#          issuer-uri: http://192.168.1.99:8000/realms/testing-system
+          issuer-uri: http://keycloak:8080/realms/testing-system
+  data:
+    redis:
+#      host: 192.168.1.99
+      host: redis-product
+      port: 6379
 eureka:
   client:
     use-dns-for-fetching-service-urls: false
@@ -32,3 +44,12 @@ eureka:
   instance:
     hostname: api-gateway
     prefer-ip-address: true
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+#      endpoint: http://192.168.1.99:9411/api/v2/spans
+      endpoint: http://zipkin:9411/api/v2/spans

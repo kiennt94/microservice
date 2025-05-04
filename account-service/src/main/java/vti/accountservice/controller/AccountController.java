@@ -94,6 +94,12 @@ public class AccountController {
         return ResponseEntity.ok(ConstantUtils.DELETE_SUCCESSFULLY);
     }
 
+
+    @GetMapping("/roles")
+    public ResponseEntity<List<String>> getAllRoles() {
+        return ResponseEntity.ok(accountService.getAllRoles());
+    }
+
     @GetMapping("/department")
     public ResponseEntity<List<AccountInfoDto>> getAccountByDepartmentId(@RequestParam Integer departmentId) {
         return ResponseEntity.ok(accountService.getAccountByDepartmentId(departmentId));

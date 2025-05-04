@@ -6,7 +6,7 @@ public class ConstantUtils {
     private ConstantUtils() {
         throw new UnsupportedOperationException("Utility class");
     }
-
+    public static final String BEARER = "Bearer ";
     public static final int MAX_PAGE_SIZE = 100;
 
     public static final String CUSTOM_EXCEPTION = "Custom exception: {}";
@@ -25,5 +25,6 @@ public class ConstantUtils {
 
     public static final String POSITION_ID_NOT_EXISTS = "position.id.not.exists";
 
-
+    public static final String ROLES_EMPTY = "roles.empty";
+    public static final String ROLE_NOT_EXISTS = "role.not.exists";
 }

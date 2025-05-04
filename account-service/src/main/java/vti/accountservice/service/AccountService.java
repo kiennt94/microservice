@@ -19,4 +19,5 @@ public interface AccountService  {
     void update(AccountUpdateRequest account);
     void delete(Integer id);
     List<AccountInfoDto> getAccountByDepartmentId(int departmentId);
+    List<String> getAllRoles();
 }
