@@ -1,13 +1,10 @@
 pipeline {
     agent any
 
-    parameters {
-        string(name: 'SERVICE_NAME', defaultValue: 'account-service', description: 'Tên service cần build (VD: account-service)')
-    }
-
     environment {
         IMAGE_TAG = 'latest'
         DOCKER_HUB_USER = 'karobest10'
+        SERVICE_NAME = 'account-service'
     }
 
     tools {
@@ -24,14 +21,16 @@ pipeline {
 
         stage('Build Maven Module') {
             steps {
-                sh "mvn clean install -pl ${params.SERVICE_NAME} -am -DskipTests"
+                sh "mvn clean install -pl ${SERVICE_NAME} -am -DskipTests"
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${params.SERVICE_NAME}:${IMAGE_TAG} -f ${params.SERVICE_NAME}/docker/Dockerfile ${params.SERVICE_NAME}"
-                sh "docker tag ${params.SERVICE_NAME}:${IMAGE_TAG} ${DOCKER_HUB_USER}/mrs-${params.SERVICE_NAME}:${IMAGE_TAG}"
+                dir("${SERVICE_NAME}") {
+                    sh "docker build -t ${SERVICE_NAME}:${IMAGE_TAG} -f docker/Dockerfile ."
+                    sh "docker tag ${SERVICE_NAME}:${IMAGE_TAG} ${DOCKER_HUB_USER}/mrs-${SERVICE_NAME}:${IMAGE_TAG}"
+                }
             }
         }
 
@@ -39,25 +38,25 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                    sh "docker push ${DOCKER_HUB_USER}/mrs-${params.SERVICE_NAME}:${IMAGE_TAG}"
+                    sh "docker push ${DOCKER_HUB_USER}/mrs-${SERVICE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
 
         stage('Deploy Container') {
             steps {
-                sh "docker rm -f ${params.SERVICE_NAME} || true"
-                sh "docker run -d --network app-network --name ${params.SERVICE_NAME} ${DOCKER_HUB_USER}/mrs-${params.SERVICE_NAME}:${IMAGE_TAG}"
+                sh "docker rm -f ${SERVICE_NAME} || true"
+                sh "docker run -d --network app-network --name ${SERVICE_NAME} ${DOCKER_HUB_USER}/mrs-${SERVICE_NAME}:${IMAGE_TAG}"
             }
         }
     }
 
     post {
         success {
-            echo "✅ Build + Deploy thành công: ${params.SERVICE_NAME}"
+            echo "✅ Build + Deploy thành công: ${SERVICE_NAME}"
         }
         failure {
-            echo "❌ Có lỗi xảy ra khi build: ${params.SERVICE_NAME}"
+            echo "❌ Có lỗi xảy ra khi build: ${SERVICE_NAME}"
         }
     }
 }

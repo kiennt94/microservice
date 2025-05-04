@@ -86,41 +86,41 @@ services:
       - app-network
     entrypoint: ["sh", "-c", "until curl -s http://eureka-server:8761/actuator/health; do echo 'Waiting for Eureka...'; sleep 5; done; java -jar /app.jar"]
 
-  account-service:
-    build:
-      context: .
-      dockerfile: ./account-service/docker/Dockerfile
-    image: account-service
-    container_name: account-service
-    depends_on:
-      - api-gateway
-    networks:
-      - app-network
-    entrypoint: ["sh", "-c", "until curl -s http://api-gateway:8080/actuator/health; do echo 'Waiting for Api Gateway...'; sleep 5; done; java -jar /app.jar"]
+#  account-service:
+#    build:
+#      context: ./account-service
+#      dockerfile: docker/Dockerfile
+#    image: account-service
+#    container_name: account-service
+#    depends_on:
+#      - api-gateway
+#    networks:
+#      - app-network
+#    entrypoint: ["sh", "-c", "until curl -s http://api-gateway:8080/actuator/health; do echo 'Waiting for Api Gateway...'; sleep 5; done; java -jar /app.jar"]
 
-  position-service:
-    build:
-      context: .
-      dockerfile: ./position-service/docker/Dockerfile
-    image: position-service
-    container_name: position-service
-    depends_on:
-      - api-gateway
-    networks:
-      - app-network
-    entrypoint: ["sh", "-c", "until curl -s http://api-gateway:8080/actuator/health; do echo 'Waiting for API Gateway...'; sleep 5; done; java -jar /app.jar"]
-
-  department-service:
-    build:
-      context: .
-      dockerfile: ./department-service/docker/Dockerfile
-    image: department-service
-    container_name: department-service
-    depends_on:
-      - api-gateway
-    networks:
-      - app-network
-    entrypoint: ["sh", "-c", "until curl -s http://api-gateway:8080/actuator/health; do echo 'Waiting for API Gateway...'; sleep 5; done; java -jar /app.jar"]
+#  position-service:
+#    build:
+#      context: .
+#      dockerfile: ./position-service/docker/Dockerfile
+#    image: position-service
+#    container_name: position-service
+#    depends_on:
+#      - api-gateway
+#    networks:
+#      - app-network
+#    entrypoint: ["sh", "-c", "until curl -s http://api-gateway:8080/actuator/health; do echo 'Waiting for API Gateway...'; sleep 5; done; java -jar /app.jar"]
+#
+#  department-service:
+#    build:
+#      context: .
+#      dockerfile: ./department-service/docker/Dockerfile
+#    image: department-service
+#    container_name: department-service
+#    depends_on:
+#      - api-gateway
+#    networks:
+#      - app-network
+#    entrypoint: ["sh", "-c", "until curl -s http://api-gateway:8080/actuator/health; do echo 'Waiting for API Gateway...'; sleep 5; done; java -jar /app.jar"]
 
   jenkins:
     image: karobest10/jenkins-dark:latest
