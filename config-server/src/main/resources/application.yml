@@ -3,11 +3,21 @@ spring:
     name: config-server
   profiles:
     active: native
+
   cloud:
     config:
       server:
-        native:
-          search-locations: ${CONFIG_REPO_LOCATION:file:///D:/microservice/spring-config-repo,file:///D:/microservice/spring-config-repo/eureka-server}
+        git:
+          uri: https://github.com/kiennt94/spring-config-repo
+          search-paths: spring-config-repo
+          default-label: main
+
+#  cloud:
+#    config:
+#      server:
+#        native:
+#          search-locations: ${CONFIG_REPO_LOCATION:file:///D:/microservice/spring-config-repo,file:///D:/microservice/spring-config-repo/eureka-server}
+
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
