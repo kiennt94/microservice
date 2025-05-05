@@ -19,6 +19,17 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh "mvn sonar:sonar -pl ${SERVICE_NAME} -am " +
+                       "-Dsonar.projectKey=${SERVICE_NAME} " +
+                       "-Dsonar.projectName=${SERVICE_NAME} " +
+                       "-Dsonar.host.url=http://sonarqube:9000"
+                }
+            }
+        }
+
         stage('Build Maven Module') {
             steps {
                 sh "mvn clean install -pl ${SERVICE_NAME} -am -DskipTests"
