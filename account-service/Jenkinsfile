@@ -19,6 +19,12 @@ pipeline {
             }
         }
 
+        stage('Run Tests & Generate Coverage') {
+            steps {
+                sh "mvn clean verify -pl ${SERVICE_NAME} -am"
+            }
+        }
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
@@ -29,7 +35,8 @@ pipeline {
                                 -Dsonar.projectKey=${SERVICE_NAME} \
                                 -Dsonar.projectName=${SERVICE_NAME} \
                                 -Dsonar.host.url=http://sonarqube:9000 \
-                                -Dsonar.token=$SONAR_TOKEN
+                                -Dsonar.token=$SONAR_TOKEN \
+                                -Dsonar.coverage.jacoco.xmlReportPaths=${SERVICE_NAME}/target/site/jacoco/jacoco.xml
                         '''
                     }
                 }

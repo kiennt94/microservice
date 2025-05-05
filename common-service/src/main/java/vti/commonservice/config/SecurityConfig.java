@@ -16,6 +16,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // This is a stateless REST API secured by token (e.g. Keycloak/JWT),
+                // so CSRF protection is not necessary and is disabled deliberately.
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
@@ -24,7 +26,6 @@ public class SecurityConfig {
                         .accessDeniedHandler(new CustomAccessDeniedHandler())
                 )
                 .addFilterBefore(new RoleHeaderAuthFilter(), UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 }

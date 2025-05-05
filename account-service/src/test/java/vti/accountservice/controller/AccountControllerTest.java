@@ -9,11 +9,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import vti.accountservice.client.DepartmentServiceClient;
+import vti.accountservice.client.PositionServiceClient;
+import vti.accountservice.repository.AccountRepository;
 import vti.accountservice.request.account.AccountCreateRequest;
 import vti.accountservice.request.account.AccountUpdateRequest;
 import vti.accountservice.response.dto.account.AccountInfoDto;
 import vti.accountservice.response.dto.account.AccountListDto;
 import vti.accountservice.service.AccountService;
+import vti.accountservice.service.impl.KeycloakAdminService;
 import vti.common.enums.PositionName;
 import vti.common.exception_handler.NotFoundException;
 import vti.common.payload.PageResponse;
@@ -27,12 +31,25 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 class AccountControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private AccountRepository accountRepository;
+
+    @MockBean
+    private DepartmentServiceClient departmentServiceClient;
+
+    @MockBean
+    private PositionServiceClient positionServiceClient;
+
+    @MockBean
+    private KeycloakAdminService keycloakAdminService;
 
     @MockBean
     private AccountService accountService;

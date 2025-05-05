@@ -22,8 +22,16 @@
         <module name="department-service" />
         <module name="gateway-service" />
         <module name="position-service" />
-        <module name="account-service" />
         <module name="eureka-server" />
+      </profile>
+      <profile name="Annotation profile for account-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
+        </processorPath>
+        <module name="account-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

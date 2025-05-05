@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import vti.accountservice.repository.AccountRepository;
 import vti.accountservice.request.account.AccountCreateRequest;
 import vti.accountservice.request.account.AccountUpdateRequest;
 import vti.accountservice.response.dto.account.AccountInfoDto;
@@ -30,7 +29,6 @@ import java.util.List;
 @Tag(name = "Account Controller", description = "APIs for managing accounts: create, update, delete, and retrieve accounts.")
 public class AccountController {
     private final AccountService accountService;
-    private final AccountRepository accountRepository;
 
     @GetMapping("")
     @Operation(summary = "Get a list of accounts", description = "Retrieve a paginated list of accounts with optional search and sorting.")
