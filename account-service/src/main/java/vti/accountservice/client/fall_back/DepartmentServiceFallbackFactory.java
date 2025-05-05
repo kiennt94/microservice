@@ -1,6 +1,7 @@
 package vti.accountservice.client.fall_back;
 
 import feign.FeignException;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
@@ -15,9 +16,10 @@ import vti.common.utils.MessageUtil;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class DepartmentServiceFallbackFactory implements FallbackFactory<DepartmentServiceClient> {
     private static final Logger logger = LoggerFactory.getLogger(DepartmentServiceFallbackFactory.class);
-
+    private final MessageUtil messageUtil;
     @Override
     public DepartmentServiceClient create(Throwable cause) {
         return new DepartmentServiceClient() {
@@ -25,7 +27,7 @@ public class DepartmentServiceFallbackFactory implements FallbackFactory<Departm
             public DepartmentInfoDto getDepartmentById(Integer id) {
                 logger.warn("Fallback activated due to: {}", cause.toString());
                 if (cause instanceof FeignException.NotFound) {
-                    throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
+                    throw new NotFoundException(messageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
                 }
                 throw new ServiceUnavailableException("Department service error: " + cause.getMessage(), "/api/department/" + id);
             }

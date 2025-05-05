@@ -43,7 +43,8 @@ public class AccountServiceImpl implements AccountService {
     private final PositionServiceClient positionServiceClient;
     private final DepartmentServiceClient departmentServiceClient;
     private final KeycloakAdminService keycloakAdminService;
-
+    private final MessageUtil messageUtil;
+    
     @Value("${keycloak.realm}")
     private String realm;
 
@@ -105,7 +106,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountInfoDto getAccountById(int id) {
         Account account = accountRepository.findById(id).orElse(null);
         if (account == null) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_ID_NOT_EXISTS));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.ACCOUNT_ID_NOT_EXISTS));
         }
         PositionInfoDto positionInfoDto = positionServiceClient.getPositionById(account.getPositionId());
         DepartmentInfoDto departmentInfoDto = departmentServiceClient.getDepartmentById(account.getDepartmentId());
@@ -124,22 +125,22 @@ public class AccountServiceImpl implements AccountService {
         Optional<String> roleName = roles.stream().filter(role -> role.equals(account.getRole().toLowerCase())).findFirst();
 
         if (roleName.isEmpty()) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.ROLE_NOT_EXISTS));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.ROLE_NOT_EXISTS));
         }
 
         if (existingUser != null) {
-            throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_USERNAME_EXISTS));
+            throw new DuplicateException(messageUtil.getMessage(ConstantUtils.ACCOUNT_USERNAME_EXISTS));
         }
 
         if (Boolean.TRUE.equals(accountRepository.existsAccountByEmail(account.getEmail()))) {
-            throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_EMAIL_EXISTS));
+            throw new DuplicateException(messageUtil.getMessage(ConstantUtils.ACCOUNT_EMAIL_EXISTS));
         }
 
         if (positionServiceClient.getPositionById(account.getPositionId()) == null) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.POSITION_ID_NOT_EXISTS));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.POSITION_ID_NOT_EXISTS));
         }
         if (departmentServiceClient.getDepartmentById(account.getDepartmentId()) == null) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
         }
         Account acc = objectMapperUtils.map(account, Account.class);
 
@@ -155,16 +156,16 @@ public class AccountServiceImpl implements AccountService {
     public void update(AccountUpdateRequest account) {
         Account acc = accountRepository.findById(account.getAccountId()).orElse(null);
         if (acc == null) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_ID_NOT_EXISTS));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.ACCOUNT_ID_NOT_EXISTS));
         }
         if (Boolean.TRUE.equals(accountRepository.existsAccountByEmailAndAccountIdNot(account.getEmail(), account.getAccountId()))) {
-            throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_EMAIL_EXISTS));
+            throw new DuplicateException(messageUtil.getMessage(ConstantUtils.ACCOUNT_EMAIL_EXISTS));
         }
         if (positionServiceClient.getPositionById(account.getPositionId()) == null) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.POSITION_ID_NOT_EXISTS));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.POSITION_ID_NOT_EXISTS));
         }
         if (departmentServiceClient.getDepartmentById(account.getDepartmentId()) == null) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
         }
 
         objectMapperUtils.getModelMapper().map(account, acc);
@@ -175,7 +176,7 @@ public class AccountServiceImpl implements AccountService {
     public void delete(Integer id) {
         Account acc = accountRepository.findById(id).orElse(null);
         if (acc == null) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.ACCOUNT_ID_NOT_EXISTS));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.ACCOUNT_ID_NOT_EXISTS));
         }
         accountRepository.delete(acc);
     }
@@ -190,7 +191,7 @@ public class AccountServiceImpl implements AccountService {
     public List<String> getAllRoles() {
         List<String> roles = keycloakAdminService.getAllRealmRoles().block();
         if (roles == null || roles.isEmpty()) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.ROLES_EMPTY));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.ROLES_EMPTY));
         }
         return FilterRole.getRootRole(roles);
     }

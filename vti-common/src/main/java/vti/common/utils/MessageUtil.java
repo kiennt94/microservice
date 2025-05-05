@@ -7,20 +7,20 @@ import org.springframework.stereotype.Component;
 import java.util.Locale;
 
 @Component
-public class MessageUtil { //NOSONAR
+public class MessageUtil {
 
-    public static MessageSource messageSource;
+    private final MessageSource messageSource;
 
-    public static String getMessage(String key) {
+    @Autowired
+    public MessageUtil(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+
+    public String getMessage(String key) {
         return messageSource.getMessage(key, null, Locale.getDefault());
     }
 
-    @Autowired
-    public MessageUtil(MessageSource injectedMessageSource) {
-        MessageUtil.messageSource = injectedMessageSource;
-    }
-
-    public static String getMessage(String key, Object[] args) {
+    public String getMessage(String key, Object[] args) {
         return messageSource.getMessage(key, args, Locale.getDefault());
     }
 }

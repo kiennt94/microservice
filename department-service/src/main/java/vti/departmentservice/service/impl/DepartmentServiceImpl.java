@@ -31,7 +31,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepository departmentRepository;
     private final MessageSource messageSource;
     private final ObjectMapperUtils objectMapperUtils = new ObjectMapperUtils();
-
+    private final MessageUtil messageUtil;
     private final AccountServiceClient accountServiceClient;
 
     @Override
@@ -46,7 +46,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             Department dep = objectMapperUtils.map(department, Department.class);
             departmentRepository.save(dep);
         } else {
-            throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_NAME_EXISTS));
+            throw new DuplicateException(messageUtil.getMessage(ConstantUtils.DEPARTMENT_NAME_EXISTS));
         }
     }
 
@@ -54,28 +54,27 @@ public class DepartmentServiceImpl implements DepartmentService {
     public void update(DepartmentUpdateRequest department) {
         Department dep = departmentRepository.findById(department.getDepartmentId()).orElse(null);
         if (dep == null) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
         }
         if (departmentRepository.findByDepartmentNameAndDepartmentIdNot(department.getDepartmentName(), department.getDepartmentId()) == null) {
             dep = objectMapperUtils.map(department, Department.class);
             departmentRepository.save(dep);
         } else {
-            throw new DuplicateException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_NAME_EXISTS));
+            throw new DuplicateException(messageUtil.getMessage(ConstantUtils.DEPARTMENT_NAME_EXISTS));
         }
     }
 
     @Override
     @Transactional
     public void delete(Integer id) {
-        id = 10000;
         Department department = departmentRepository.findByDepartmentId(id);
         if (department == null) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
         }
 
         List<AccountInfoDto> accountInfos = accountServiceClient.getAccountInfosByDepartmentId(id);
         if (accountInfos != null && !accountInfos.isEmpty()) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_EXISTS_IN_ACCOUNT));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_EXISTS_IN_ACCOUNT));
         }
         departmentRepository.delete(department);
     }
@@ -95,7 +94,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public DepartmentInfoDto getDepartmentById(Integer id) {
         Department department = departmentRepository.findById(id).orElse(null);
         if (department == null) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.DEPARTMENT_ID_NOT_EXISTS));
         }
         return objectMapperUtils.map(department, DepartmentInfoDto.class);
     }

@@ -20,6 +20,8 @@ import vti.accountservice.response.dto.department.DepartmentInfoDto;
 import vti.accountservice.response.dto.position.PositionInfoDto;
 import vti.common.enums.PositionName;
 import vti.common.payload.PageResponse;
+import vti.common.utils.MessageUtil;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +46,9 @@ class AccountServiceImplTest {
     @Mock
     private KeycloakAdminService keycloakAdminService;
 
+    @Mock
+    private MessageUtil messageUtil;
+
     @InjectMocks
     private AccountServiceImpl accountService;
 
@@ -55,7 +60,8 @@ class AccountServiceImplTest {
                 passwordEncoder,
                 positionServiceClient,
                 departmentServiceClient,
-                keycloakAdminService
+                keycloakAdminService,
+                messageUtil
         );
     }
 

@@ -136,6 +136,7 @@ services:
 
   jenkins:
     image: karobest10/jenkins-dark:latest
+    mem_limit: 4g
     container_name: jenkins
     ports:
       - "8001:8080"

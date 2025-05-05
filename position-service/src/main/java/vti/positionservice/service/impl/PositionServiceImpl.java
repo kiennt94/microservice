@@ -23,6 +23,7 @@ public class PositionServiceImpl implements PositionService {
 
     private final PositionRepository positionRepository;
     private final ObjectMapperUtils objectMapperUtils = new ObjectMapperUtils();
+    private final MessageUtil messageUtil;
 
     @Override
     public PageResponse<PositionListDto> getAll(Pageable pageable, String search) {
@@ -45,7 +46,7 @@ public class PositionServiceImpl implements PositionService {
     public PositionInfoDto getPositionById(Integer id) {
         Position position = positionRepository.findById(id).orElse(null);
         if (position == null) {
-            throw new NotFoundException(MessageUtil.getMessage(ConstantUtils.POSITION_ID_NOT_EXISTS));
+            throw new NotFoundException(messageUtil.getMessage(ConstantUtils.POSITION_ID_NOT_EXISTS));
         }
         return objectMapperUtils.map(position, PositionInfoDto.class);
     }

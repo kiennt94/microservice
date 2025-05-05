@@ -1,6 +1,7 @@
 package vti.common.exception_handler;
 
 import lombok.Getter;
+import vti.common.payload.ApiError;
 
 @Getter
 public class CustomApiException extends RuntimeException {
