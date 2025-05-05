@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_TAG = 'latest'
+        DOCKER_HUB_USER = 'karobest10'
+        SERVICE_NAME = 'position-service'
+    }
+
+    tools {
+        maven 'maven_3.9'
+        jdk 'JDK 17'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/kiennt94/microservice'
+            }
+        }
+
+        stage('Build Maven Module') {
+            steps {
+                sh "mvn clean install -pl ${SERVICE_NAME} -am -DskipTests"
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir("${SERVICE_NAME}") {
+                    sh "docker build -t ${SERVICE_NAME}:${IMAGE_TAG} -f docker/Dockerfile ."
+                    sh "docker tag ${SERVICE_NAME}:${IMAGE_TAG} ${DOCKER_HUB_USER}/mrs-${SERVICE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                    sh "docker push ${DOCKER_HUB_USER}/mrs-${SERVICE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                sh "docker rm -f ${SERVICE_NAME} || true"
+                sh "docker run -d --network app-network --name ${SERVICE_NAME} ${DOCKER_HUB_USER}/mrs-${SERVICE_NAME}:${IMAGE_TAG}"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Build + Deploy thành công: ${SERVICE_NAME}"
+        }
+        failure {
+            echo "❌ Có lỗi xảy ra khi build: ${SERVICE_NAME}"
+        }
+    }
+}

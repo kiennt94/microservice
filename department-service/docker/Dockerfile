@@ -1,6 +1,5 @@
 FROM openjdk:17-jdk-slim
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-COPY department-service/target/*.jar /app.jar
+COPY target/*.jar /app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
 EXPOSE 8084
