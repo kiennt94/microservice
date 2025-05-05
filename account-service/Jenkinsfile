@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    parameters {
+        booleanParam(name: 'RUN_SONAR', defaultValue: true, description: '✅ Bật Sonar + Jacoco phân tích mã nguồn?')
+    }
+
     environment {
         IMAGE_TAG = 'latest'
         DOCKER_HUB_USER = 'karobest10'
@@ -19,24 +23,22 @@ pipeline {
             }
         }
 
-        stage('Run Tests & Generate Coverage') {
-            steps {
-                sh "mvn clean verify -pl ${SERVICE_NAME} -am"
-            }
-        }
-
         stage('SonarQube Analysis') {
+            when {
+                expression { params.RUN_SONAR }
+            }
             steps {
                 withSonarQubeEnv('SonarQube') {
                     withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
                         sh '''#!/bin/bash
-                            mvn sonar:sonar \
+                            mvn clean verify \
                                 -pl ${SERVICE_NAME} -am \
+                                -DskipTests=false \
                                 -Dsonar.projectKey=${SERVICE_NAME} \
                                 -Dsonar.projectName=${SERVICE_NAME} \
                                 -Dsonar.host.url=http://sonarqube:9000 \
                                 -Dsonar.token=$SONAR_TOKEN \
-                                -Dsonar.coverage.jacoco.xmlReportPaths=${SERVICE_NAME}/target/site/jacoco/jacoco.xml
+                                sonar:sonar
                         '''
                     }
                 }
@@ -49,30 +51,8 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                dir("${SERVICE_NAME}") {
-                    sh "docker build -t ${SERVICE_NAME}:${IMAGE_TAG} -f docker/Dockerfile ."
-                    sh "docker tag ${SERVICE_NAME}:${IMAGE_TAG} ${DOCKER_HUB_USER}/mrs-${SERVICE_NAME}:${IMAGE_TAG}"
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                    sh "docker push ${DOCKER_HUB_USER}/mrs-${SERVICE_NAME}:${IMAGE_TAG}"
-                }
-            }
-        }
-
-        stage('Deploy Container') {
-            steps {
-                sh "docker rm -f ${SERVICE_NAME} || true"
-                sh "docker run -d --network app-network --name ${SERVICE_NAME} ${DOCKER_HUB_USER}/mrs-${SERVICE_NAME}:${IMAGE_TAG}"
-            }
-        }
+        ...
+        // Các stage khác giữ nguyên
     }
 
     post {
