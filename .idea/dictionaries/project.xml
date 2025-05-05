@@ -7,6 +7,7 @@
       <w>commonservice</w>
       <w>departmentservice</w>
       <w>dskip</w>
+      <w>dsonar</w>
       <w>eurekaserver</w>
       <w>gatewayservice</w>
       <w>karobest</w>
