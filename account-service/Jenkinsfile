@@ -50,6 +50,25 @@ pipeline {
                 sh "mvn clean install -pl ${SERVICE_NAME} -am -DskipTests"
             }
         }
+
+        stage('Build Docker Image') {
+            steps {
+                dir("${SERVICE_NAME}/docker") {
+                    sh """
+                        docker build -t ${DOCKER_HUB_USER}/${SERVICE_NAME}:${IMAGE_TAG} .
+                    """
+                }
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                sh """
+                    docker rm -f ${SERVICE_NAME} || true
+                    docker run -d --name ${SERVICE_NAME} -p 8080:8080 ${DOCKER_HUB_USER}/${SERVICE_NAME}:${IMAGE_TAG}
+                """
+            }
+        }
     }
 
     post {
@@ -57,7 +76,7 @@ pipeline {
             echo "✅ Build + Deploy thành công: ${SERVICE_NAME}"
         }
         failure {
-            echo "❌ Có lỗi xảy ra khi build: ${SERVICE_NAME}"
+            echo "❌ Có lỗi xảy ra khi build hoặc deploy: ${SERVICE_NAME}"
         }
     }
 }
