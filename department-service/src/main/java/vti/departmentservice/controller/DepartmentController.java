@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import vti.common.exception_handler.NotFoundException;
 import vti.common.payload.PageResponse;
 import vti.departmentservice.request.department.DepartmentCreateRequest;
 import vti.departmentservice.request.department.DepartmentUpdateRequest;
@@ -106,6 +107,7 @@ public class DepartmentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DepartmentInfoDto> getDepartmentById(@PathVariable Integer id) {
-        return ResponseEntity.ok(departmentService.getDepartmentById(id));
+        throw new NotFoundException("Department not found");
+//        return ResponseEntity.ok(departmentService.getDepartmentById(id));
     }
 }
